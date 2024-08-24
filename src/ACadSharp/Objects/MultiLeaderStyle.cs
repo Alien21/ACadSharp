@@ -562,7 +562,10 @@ namespace ACadSharp.Objects
 		/// </para><para>
 		/// The value for all leader lines can be overridden for each individual leader line by the
 		/// <see cref="MultiLeaderAnnotContext.LeaderRoot.TextAttachmentDirection"/> property when the
-		/// <see cref="LeaderLinePropertOverrideFlags.TextAttachmentDirection"/> flag is set in the 
+		/// <see>
+		///     <cref>LeaderLinePropertOverrideFlags.TextAttachmentDirection</cref>
+		/// </see>
+		/// flag is set in the 
 		/// <see cref="MultiLeaderAnnotContext.LeaderLine.OverrideFlags"/> property.
 		/// </para>
 		/// </remarks>

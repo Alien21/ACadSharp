@@ -177,7 +177,9 @@ namespace ACadSharp.IO
 
 		private void writeSummaryInfo()
 		{
+#pragma warning disable CS1587 // XML comment is not placed on a valid language element
 			///<see cref="DwgReader.ReadSummaryInfo"/>
+#pragma warning restore CS1587 // XML comment is not placed on a valid language element
 
 			if (this._fileHeader.AcadVersion < ACadVersion.AC1018)
 				return;

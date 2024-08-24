@@ -112,10 +112,10 @@ namespace ACadSharp.IO.DXF
 			this._writer.Write(60, entity.IsInvisible ? (short)1 : (short)0, map);
 
 			//TODO: Write if the layout is paperspace
-			if (false)
-			{
-				this._writer.Write(67, (short)1);
-			}
+			// if (false)
+			// {
+			// 	this._writer.Write(67, (short)1);
+			// }
 
 			this._writer.Write(370, entity.LineWeight);
 		}

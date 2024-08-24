@@ -6,8 +6,8 @@ namespace ACadSharp.IO.Templates
 {
 	internal class CadSplineTemplate : CadEntityTemplate<Spline>
 	{
-		private CSMath.XYZ _currentControlPoint = new CSMath.XYZ();
-		private CSMath.XYZ _currentFitPoint = new CSMath.XYZ();
+		// private CSMath.XYZ _currentControlPoint = new CSMath.XYZ();
+		// private CSMath.XYZ _currentFitPoint = new CSMath.XYZ();
 
 		public CadSplineTemplate() : base(new Spline()) { }
 

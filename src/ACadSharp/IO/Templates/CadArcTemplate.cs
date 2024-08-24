@@ -19,11 +19,11 @@ namespace ACadSharp.IO.Templates
 
 			return;
 
-            if (builder is DxfDocumentBuilder && this.CadObject is Arc arc)
-            {
-                arc.StartAngle *= MathUtils.DegToRadFactor;
-                arc.EndAngle *= MathUtils.DegToRadFactor;
-            }
+            // if (builder is DxfDocumentBuilder && this.CadObject is Arc arc)
+            // {
+            //     arc.StartAngle *= MathUtils.DegToRadFactor;
+            //     arc.EndAngle *= MathUtils.DegToRadFactor;
+            // }
 		}
 	}
 }

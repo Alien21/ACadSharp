@@ -14,6 +14,7 @@ using System;
 using CSUtilities.Converters;
 using CSUtilities.Extensions;
 using static ACadSharp.Objects.MultiLeaderAnnotContext;
+#pragma warning disable CS0618 // Type or member is obsolete
 
 namespace ACadSharp.IO.DWG
 {
@@ -86,7 +87,7 @@ namespace ACadSharp.IO.DWG
 		private readonly Stream _crcStream;
 		private readonly byte[] _crcStreamBuffer;
 
-		private readonly byte[] _buffer;
+		// private readonly byte[] _buffer;
 
 		public DwgObjectReader(
 			ACadVersion version,
@@ -1636,7 +1637,9 @@ namespace ACadSharp.IO.DWG
 		private CadTemplate readArc()
 		{
 			Arc arc = new Arc();
+#pragma warning disable CS0612 // Type or member is obsolete
 			CadEntityTemplate template = new CadArcTemplate(arc);
+#pragma warning restore CS0612 // Type or member is obsolete
 
 			this.readCommonEntityData(template);
 
@@ -1749,7 +1752,9 @@ namespace ACadSharp.IO.DWG
 			byte flags = (this._objectReader.ReadByte());
 			dimension.IsOrdinateTypeX = (flags & 0b01) != 0;
 
+#pragma warning disable CS0618 // Type or member is obsolete
 			this.readCommonDimensionHandles(template);
+#pragma warning restore CS0618 // Type or member is obsolete
 
 			return template;
 		}
@@ -1766,7 +1771,9 @@ namespace ACadSharp.IO.DWG
 			//Dim rot BD 50 Linear dimension rotation; see DXF documentation.
 			dimension.Rotation = this._objectReader.ReadBitDouble();
 
+#pragma warning disable CS0618 // Type or member is obsolete
 			this.readCommonDimensionHandles(template);
+#pragma warning restore CS0618 // Type or member is obsolete
 
 			return template;
 		}
@@ -1780,7 +1787,9 @@ namespace ACadSharp.IO.DWG
 
 			this.readCommonDimensionAlignedData(template);
 
+#pragma warning disable CS0618 // Type or member is obsolete
 			this.readCommonDimensionHandles(template);
+#pragma warning restore CS0618 // Type or member is obsolete
 
 			return template;
 		}
@@ -1802,7 +1811,9 @@ namespace ACadSharp.IO.DWG
 			//15-pt 3BD 15 See DXF documentation.
 			dimension.AngleVertex = this._objectReader.Read3BitDouble();
 
+#pragma warning disable CS0618 // Type or member is obsolete
 			this.readCommonDimensionHandles(template);
+#pragma warning restore CS0618 // Type or member is obsolete
 
 			return template;
 		}
@@ -1828,7 +1839,9 @@ namespace ACadSharp.IO.DWG
 			//10 - pt 3BD 10 See DXF documentation.
 			dimension.DefinitionPoint = this._objectReader.Read3BitDouble();
 
+#pragma warning disable CS0618 // Type or member is obsolete
 			this.readCommonDimensionHandles(template);
+#pragma warning restore CS0618 // Type or member is obsolete
 
 			return template;
 		}
@@ -1848,7 +1861,9 @@ namespace ACadSharp.IO.DWG
 			//Leader len D 40 Leader length.
 			dimension.LeaderLength = this._objectReader.ReadBitDouble();
 
+#pragma warning disable CS0618 // Type or member is obsolete
 			this.readCommonDimensionHandles(template);
+#pragma warning restore CS0618 // Type or member is obsolete
 
 			return template;
 		}
@@ -1868,7 +1883,9 @@ namespace ACadSharp.IO.DWG
 			//Leader len D 40 Leader length.
 			dimension.LeaderLength = this._objectReader.ReadBitDouble();
 
+#pragma warning disable CS0618 // Type or member is obsolete
 			this.readCommonDimensionHandles(template);
+#pragma warning restore CS0618 // Type or member is obsolete
 
 			return template;
 		}
@@ -1916,7 +1933,9 @@ namespace ACadSharp.IO.DWG
 			//Horiz dir BD 51 See DXF documentation.
 			dimension.HorizontalDirection = this._objectReader.ReadBitDouble();
 
+#pragma warning disable CS1587 // XML comment is not placed on a valid language element
 			///<see cref="DwgObjectWriter.writeCommonDimensionData"></see>
+#pragma warning restore CS1587 // XML comment is not placed on a valid language element
 			//TODO: readDimension insert scale and rotation not implemented
 
 			//Ins X - scale BD 41 Undoc'd. These apply to the insertion of the
@@ -4560,18 +4579,18 @@ namespace ACadSharp.IO.DWG
 		{
 			return null;
 
-			DwgViewportEntityControlTemplate template = new DwgViewportEntityControlTemplate();
-
-			this.readCommonNonEntityData(template);
-
-			//Common:
-			//Numentries BL 70
-			int numentries = this._objectReader.ReadBitLong();
-			for (int i = 0; i < numentries; ++i)
-				//Handle refs H NULL(soft pointer)	xdicobjhandle(hard owner)	the apps(soft owner)
-				template.EntryHandles.Add(this.handleReference());
-
-			return template;
+			// DwgViewportEntityControlTemplate template = new DwgViewportEntityControlTemplate();
+			//
+			// this.readCommonNonEntityData(template);
+			//
+			// //Common:
+			// //Numentries BL 70
+			// int numentries = this._objectReader.ReadBitLong();
+			// for (int i = 0; i < numentries; ++i)
+			// 	//Handle refs H NULL(soft pointer)	xdicobjhandle(hard owner)	the apps(soft owner)
+			// 	template.EntryHandles.Add(this.handleReference());
+			//
+			// return template;
 		}
 
 		private CadTemplate readViewportEntityHeader()
@@ -5612,30 +5631,30 @@ namespace ACadSharp.IO.DWG
 		{
 			return null;
 
-			DwgColorTemplate.DwgColor dwgColor = new DwgColorTemplate.DwgColor();
-			DwgColorTemplate template = new DwgColorTemplate(dwgColor);
-
-			this.readCommonNonEntityData(template);
-
-			short colorIndex = this._objectReader.ReadBitShort();
-
-			if (this.R2004Plus && this._version < ACadVersion.AC1032)
-			{
-				short index = (short)this._objectReader.ReadBitLong();
-				byte flags = this._objectReader.ReadByte();
-
-				if ((flags & 1U) > 0U)
-					template.Name = this._textReader.ReadVariableText();
-
-				if ((flags & 2U) > 0U)
-					template.BookName = this._textReader.ReadVariableText();
-
-				dwgColor.Color = new Color(index);
-			}
-
-			dwgColor.Color = new Color(colorIndex);
-
-			return null;
+			// DwgColorTemplate.DwgColor dwgColor = new DwgColorTemplate.DwgColor();
+			// DwgColorTemplate template = new DwgColorTemplate(dwgColor);
+			//
+			// this.readCommonNonEntityData(template);
+			//
+			// short colorIndex = this._objectReader.ReadBitShort();
+			//
+			// if (this.R2004Plus && this._version < ACadVersion.AC1032)
+			// {
+			// 	short index = (short)this._objectReader.ReadBitLong();
+			// 	byte flags = this._objectReader.ReadByte();
+			//
+			// 	if ((flags & 1U) > 0U)
+			// 		template.Name = this._textReader.ReadVariableText();
+			//
+			// 	if ((flags & 2U) > 0U)
+			// 		template.BookName = this._textReader.ReadVariableText();
+			//
+			// 	dwgColor.Color = new Color(index);
+			// }
+			//
+			// dwgColor.Color = new Color(colorIndex);
+			//
+			// return null;
 		}
 	}
 }

@@ -2,6 +2,6 @@
 {
 	internal interface ICadDictionaryTemplate : ICadObjectTemplate
 	{
-		public CadObject CadObject { get; set; }
+		public new CadObject CadObject { get; set; }
 	}
 }

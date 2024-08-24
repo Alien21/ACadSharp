@@ -100,6 +100,7 @@ namespace ACadSharp.IO
 		/// <param name="stream"></param>
 		/// <param name="document"></param>
 		/// <param name="binary"></param>
+		/// <param name="notification"></param>
 		public static void Write(Stream stream, CadDocument document, bool binary, NotificationEventHandler notification = null)
 		{
 			using (DxfWriter writer = new DxfWriter(stream, document, binary))

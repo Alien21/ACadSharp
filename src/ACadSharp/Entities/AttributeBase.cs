@@ -38,13 +38,13 @@ namespace ACadSharp.Entities
 				return;
 
 				//TODO: explore AttributeBase tag constrain
-				if (value == null)
-					throw new System.ArgumentNullException(nameof(value));
-
-				if (value.Contains(" "))
-					throw new System.ArgumentException($"Attribute Tag {value} cannot contain spaces", nameof(value));
-
-				this._tag = value;
+				// if (value == null)
+				// 	throw new System.ArgumentNullException(nameof(value));
+				//
+				// if (value.Contains(" "))
+				// 	throw new System.ArgumentException($"Attribute Tag {value} cannot contain spaces", nameof(value));
+				//
+				// this._tag = value;
 			}
 		}
 

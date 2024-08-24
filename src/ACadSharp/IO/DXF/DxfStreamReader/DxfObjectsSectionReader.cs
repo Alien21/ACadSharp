@@ -248,7 +248,9 @@ namespace ACadSharp.IO.DXF
 			//Jump the 0 marker
 			this._reader.ReadNext();
 
+#pragma warning disable CS0618 // Type or member is obsolete
 			this.readCommonObjectData(template);
+#pragma warning restore CS0618 // Type or member is obsolete
 
 			System.Diagnostics.Debug.Assert(DxfSubclassMarker.SortentsTable == this._reader.ValueAsString);
 
