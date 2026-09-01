@@ -1,5 +1,7 @@
-﻿using ACadSharp.Tables;
+﻿using ACadSharp.IO.DXF.DxfStreamWriter;
+using ACadSharp.Tables;
 using ACadSharp.Tables.Collections;
+using CSMath;
 using System;
 using System.Linq;
 
@@ -9,9 +11,8 @@ namespace ACadSharp.IO.DXF
 	{
 		public override string SectionName { get { return DxfFileToken.TablesSection; } }
 
-		public DxfTablesSectionWriter(IDxfStreamWriter writer, CadDocument document, CadObjectHolder holder) : base(writer, document, holder)
-		{
-		}
+		public DxfTablesSectionWriter(IDxfStreamWriter writer, CadDocument document, CadObjectHolder objectHolder, DxfWriterConfiguration configuration)
+			: base(writer, document, objectHolder, configuration) { }
 
 		protected override void writeSection()
 		{
@@ -23,20 +24,20 @@ namespace ACadSharp.IO.DXF
 			this.writeTable(this._document.UCSs);
 			this.writeTable(this._document.AppIds);
 			this.writeTable(this._document.DimensionStyles, DxfSubclassMarker.DimensionStyleTable);
-			this.writeTable(this._document.BlockRecords);
+			this.writeTable(this._document.BlockRecords, writeFlags: false);
 		}
 
-		private void writeTable<T>(Table<T> table, string subclass = null)
+		private void writeTable<T>(Table<T> table, string subclass = null, bool writeFlags = true)
 			where T : TableEntry
 		{
-			this._writer.Write(DxfCode.Start, DxfFileToken.EntityTable);
-			this._writer.Write(DxfCode.SymbolTableName, table.ObjectName);
+			this._writer.Write(DxfCode.Start, DxfFileToken.TableEntry);
+			this._writer.Write(DxfCode.Name, table.ObjectName);
 
 			this.writeCommonObjectData(table);
 
 			this._writer.Write(DxfCode.Subclass, DxfSubclassMarker.Table);
 
-			this._writer.Write(70, table.Count);
+			this._writer.Write(70, table.Count > short.MaxValue ? (short)0 : (short)table.Count);
 
 			if (!string.IsNullOrEmpty(subclass))
 			{
@@ -45,13 +46,19 @@ namespace ACadSharp.IO.DXF
 
 			foreach (T entry in table)
 			{
-				writeEntry(entry);
+				if (!entry.IsValid(CadFileFormat.DXF, this.Version))
+				{
+					this.notify($"{entry.GetType().FullName} with name {entry.Name} is not valid for version {this.Version}.", NotificationType.Warning);
+					continue;
+				}
+
+				writeEntry(entry, writeFlags);
 			}
 
 			this._writer.Write(DxfCode.Start, DxfFileToken.EndTable);
 		}
 
-		private void writeEntry<T>(T entry)
+		private void writeEntry<T>(T entry, bool writeFlags = true)
 			where T : TableEntry
 		{
 			DxfMap map = DxfMap.Create<T>();
@@ -65,14 +72,17 @@ namespace ACadSharp.IO.DXF
 
 			if (entry is TextStyle ts && ts.IsShapeFile)
 			{
-				this._writer.Write(DxfCode.SymbolTableName, string.Empty);
+				this._writer.Write(DxfCode.Name, string.Empty);
 			}
 			else
 			{
-				this._writer.Write(DxfCode.SymbolTableName, entry.Name);
+				this._writer.Write(DxfCode.Name, entry.Name);
 			}
 
-			this._writer.Write(70, entry.Flags);
+			if (writeFlags)
+			{
+				this._writer.Write(70, entry.Flags);
+			}
 
 			switch (entry)
 			{
@@ -102,13 +112,11 @@ namespace ACadSharp.IO.DXF
 				case VPort vport:
 					this.writeVPort(vport, map.SubClasses[vport.SubclassMarker]);
 					break;
-#if TEST
 				default:
-					throw new NotImplementedException();
-#endif
+					throw new NotImplementedException($"TableEntry not implemented {entry.GetType().FullName}");
 			}
 
-			this.writeExtendedData(entry);
+			this.writeExtendedData(entry.ExtendedData);
 		}
 
 		private void writeBlockRecord(BlockRecord block, DxfClassMap map)
@@ -140,7 +148,7 @@ namespace ACadSharp.IO.DXF
 			if (style.TextBackgroundFillMode != 0)
 			{
 				this._writer.Write(69, (short)style.TextBackgroundFillMode, map);
-				this._writer.Write(70, style.TextBackgroundColor.Index, map);
+				this._writer.Write(70, style.TextBackgroundColor.GetApproxIndex(), map);
 			}
 			else
 			{
@@ -183,7 +191,7 @@ namespace ACadSharp.IO.DXF
 			this._writer.Write(177, style.ExtensionLineColor.GetApproxIndex(), map);
 			this._writer.Write(178, style.TextColor.GetApproxIndex(), map);
 
-			this._writer.Write(179, style.AngularDimensionDecimalPlaces);
+			this._writer.Write(179, style.AngularDecimalPlaces);
 
 			this._writer.Write(271, style.DecimalPlaces);
 			this._writer.Write(272, style.ToleranceDecimalPlaces);
@@ -218,18 +226,19 @@ namespace ACadSharp.IO.DXF
 
 		private void writeLayer(Layer layer, DxfClassMap map)
 		{
+			int index = layer.Color.IsTrueColor ? layer.Color.GetApproxIndex() : layer.Color.Index;
 			if (layer.IsOn)
 			{
-				this._writer.Write(62, layer.Color.Index, map);
+				this._writer.Write(62, index, map);
 			}
 			else
 			{
-				this._writer.Write(62, (short)-layer.Color.Index, map);
+				this._writer.Write(62, -index, map);
 			}
 
 			if (layer.Color.IsTrueColor)
 			{
-				this._writer.Write(420, (uint)layer.Color.TrueColor, map);
+				this._writer.WriteTrueColor(420, layer.Color, map);
 			}
 
 			this._writer.Write(6, layer.LineType.Name, map);
@@ -248,20 +257,20 @@ namespace ACadSharp.IO.DXF
 
 			this._writer.Write(72, (short)linetype.Alignment, map);
 			this._writer.Write(73, (short)linetype.Segments.Count(), map);
-			this._writer.Write(40, linetype.PatternLen);
+			this._writer.Write(40, linetype.PatternLength);
 
 			foreach (LineType.Segment s in linetype.Segments)
 			{
 				this._writer.Write(49, s.Length);
-				this._writer.Write(74, (short)s.Shapeflag);
+				this._writer.Write(74, (short)s.Flags);
 
-				if (s.Shapeflag != LinetypeShapeFlags.None)
+				if (s.Flags != LineTypeShapeFlags.None)
 				{
-					if (s.Shapeflag.HasFlag(LinetypeShapeFlags.Shape))
+					if (s.Flags.HasFlag(LineTypeShapeFlags.Shape))
 					{
 						this._writer.Write(75, s.ShapeNumber);
 					}
-					if (s.Shapeflag.HasFlag(LinetypeShapeFlags.Text))
+					if (s.Flags.HasFlag(LineTypeShapeFlags.Text))
 					{
 						this._writer.Write(75, (short)0);
 					}
@@ -276,7 +285,7 @@ namespace ACadSharp.IO.DXF
 					}
 
 					this._writer.Write(46, s.Scale);
-					this._writer.Write(50, s.Rotation * MathUtils.DegToRadFactor);
+					this._writer.Write(50, MathHelper.RadToDeg(s.Rotation));
 					this._writer.Write(44, s.Offset.X);
 					this._writer.Write(45, s.Offset.Y);
 					this._writer.Write(9, s.Text);

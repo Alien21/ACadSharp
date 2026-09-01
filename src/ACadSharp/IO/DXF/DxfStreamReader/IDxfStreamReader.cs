@@ -1,53 +1,54 @@
-﻿namespace ACadSharp.IO.DXF
+﻿namespace ACadSharp.IO.DXF.DxfStreamReader;
+
+internal interface IDxfStreamReader
 {
-	internal interface IDxfStreamReader
-	{
-		DxfCode DxfCode { get; }
+	DxfCode DxfCode { get; }
 
-		GroupCodeValueType GroupCodeValue { get; }
-		
-		int Code { get; }
-		
-		object Value { get; }
+	GroupCodeValueType GroupCodeValue { get; }
 
-		/// <summary>
-		/// Current line or offset in the file
-		/// </summary>
-		int Position { get; }
+	int Code { get; }
 
-		/// <summary>
-		/// Last value read in the dxf file without any transformation
-		/// </summary>
-		string ValueAsString { get; }
+	object Value { get; }
 
-		string ValueRaw { get; }
+	/// <summary>
+	/// Current line or offset in the file
+	/// </summary>
+	int Position { get; }
 
-		bool ValueAsBool { get; }
+	/// <summary>
+	/// Last value read in the dxf file without any transformation
+	/// </summary>
+	string ValueAsString { get; }
 
-		short ValueAsShort { get; }
+	string ValueRaw { get; }
 
-		ushort ValueAsUShort { get; }
-		
-		int ValueAsInt { get; }
-		
-		long ValueAsLong { get; }
-		
-		double ValueAsDouble { get; }
+	bool ValueAsBool { get; }
 
-		double ValueAsAngle { get; }
-		
-		ulong ValueAsHandle { get; }
-		
-		byte[] ValueAsBinaryChunk { get; }
+	short ValueAsShort { get; }
 
-		/// <summary>
-		/// Find a dxf entry in the file.
-		/// </summary>
-		/// <param name="dxfEntry"></param>
-		bool Find(string dxfEntry);
+	ushort ValueAsUShort { get; }
 
-		void Start();
-		
-		void ReadNext();
-	}
+	int ValueAsInt { get; }
+
+	long ValueAsLong { get; }
+
+	double ValueAsDouble { get; }
+
+	double ValueAsAngle { get; }
+
+	ulong ValueAsHandle { get; }
+
+	byte[] ValueAsBinaryChunk { get; }
+
+	/// <summary>
+	/// Find a dxf entry in the file.
+	/// </summary>
+	/// <param name="dxfEntry"></param>
+	bool Find(string dxfEntry);
+
+	void Start();
+
+	void ReadNext();
+
+	void ExpectedCode(int code);
 }

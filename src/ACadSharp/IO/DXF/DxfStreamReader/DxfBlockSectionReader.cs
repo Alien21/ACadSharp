@@ -1,5 +1,6 @@
 ﻿using ACadSharp.Blocks;
 using ACadSharp.Exceptions;
+using ACadSharp.IO.DXF.DxfStreamReader;
 using ACadSharp.IO.Templates;
 using ACadSharp.Tables;
 using System;
@@ -55,10 +56,11 @@ namespace ACadSharp.IO.DXF
 			DxfMap map = DxfMap.Create<Block>();
 
 			Block blckEntity = new Block();
-			CadEntityTemplate template = new CadEntityTemplate(blckEntity);
+			CadBlockEntityTemplate template = new CadBlockEntityTemplate(blckEntity);
 
 			string name = null;
 			BlockRecord record = null;
+			CadBlockRecordTemplate recordTemplate = null;
 
 			while (this._reader.DxfCode != DxfCode.Start)
 			{
@@ -112,8 +114,9 @@ namespace ACadSharp.IO.DXF
 			{
 				record = new BlockRecord(name);
 				record.BlockEntity = blckEntity;
-				CadBlockRecordTemplate recordTemplate = new CadBlockRecordTemplate(record);
+				recordTemplate = new CadBlockRecordTemplate(record);
 
+				this._builder.AddTemplate(recordTemplate);
 				this._builder.BlockRecords.Add(record);
 
 				if (recordTemplate.CadObject.Name.Equals(BlockRecord.ModelSpaceName, StringComparison.OrdinalIgnoreCase))
@@ -121,6 +124,13 @@ namespace ACadSharp.IO.DXF
 					this._builder.ModelSpaceTemplate = recordTemplate;
 				}
 			}
+			else if (!this._builder.TryGetObjectTemplate<CadBlockRecordTemplate>(record.Handle, out recordTemplate))
+			{
+				recordTemplate = new CadBlockRecordTemplate(record);
+			}
+
+			//Add the entity template for owner information
+			recordTemplate.BlockEntityTemplate = template;
 
 			while (this._reader.ValueAsString != DxfFileToken.EndBlock)
 			{
@@ -146,7 +156,19 @@ namespace ACadSharp.IO.DXF
 
 				//Add the object and the template to the builder
 				this._builder.AddTemplate(entityTemplate);
-				record.Entities.Add(entityTemplate.CadObject);
+
+				if (entityTemplate.OwnerHandle == null)
+				{
+					recordTemplate.ReferenceTemplates.Add(entityTemplate);
+				}
+				else if (this._builder.TryGetObjectTemplate(entityTemplate.OwnerHandle, out ICadOwnerTemplate owner))
+				{
+					owner.OwnedObjectsHandlers.Add(entityTemplate.CadObject.Handle);
+				}
+				else
+				{
+					this._builder.OrphanTemplates.Add(entityTemplate);
+				}
 			}
 
 			this.readBlockEnd(record.BlockEnd);

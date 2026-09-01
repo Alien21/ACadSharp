@@ -1,491 +1,343 @@
-﻿using System;
+﻿using CSUtilities.Extensions;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace ACadSharp.Classes
+namespace ACadSharp.Classes;
+
+/// <summary>
+/// Represents a collection of <see cref="DxfClass"/> objects.
+/// </summary>
+public class DxfClassCollection : ICollection<DxfClass>
 {
-	public class DxfClassCollection : ICollection<DxfClass>
+	/// <inheritdoc/>
+	public int Count { get { return this._entries.Count; } }
+
+	/// <inheritdoc/>
+	public bool IsReadOnly => false;
+
+	private readonly CadDocument _document;
+
+	private readonly Dictionary<string, DxfClass> _entries = new Dictionary<string, DxfClass>(StringComparer.OrdinalIgnoreCase);
+
+	/// <summary>
+	/// Initializes a new instance of the <see cref="DxfClassCollection"/> class.
+	/// </summary>
+	/// <param name="document">The CAD document associated with this collection.</param>
+	public DxfClassCollection(CadDocument document)
 	{
-		/// <inheritdoc/>
-		public int Count { get { return this._entries.Count; } }
+		this._document = document;
+	}
 
-		/// <inheritdoc/>
-		public bool IsReadOnly => false;
+	/// <summary>
+	/// Add a dxf class to the collection if the <see cref="DxfClass.DxfName"/> is not present.
+	/// </summary>
+	/// <param name="item">The dxf class to add.</param>
+	public void Add(DxfClass item)
+	{
+		this._entries.Add(item.DxfName, item);
+	}
 
-		public Dictionary<string, DxfClass> _entries = new Dictionary<string, DxfClass>(StringComparer.OrdinalIgnoreCase);
-
-		/// <summary>
-		/// Adds or updates the classes in a specific document 
-		/// </summary>
-		/// <param name="doc"></param>
-		public static void UpdateDxfClasses(CadDocument doc)
+	/// <summary>
+	/// Add a dxf class to the collection or updates the existing one if the <see cref="DxfClass.DxfName"/> is already in the collection.
+	/// </summary>
+	/// <param name="item">The dxf class to add or update.</param>
+	public void AddOrUpdate(DxfClass item)
+	{
+		if (this._entries.TryGetValue(item.DxfName, out DxfClass result))
 		{
-			//AcDbDictionaryWithDefault
-			doc.Classes.AddOrUpdate(new DxfClass
-			{
-				CppClassName = "AcDbDictionaryWithDefault",
-				ClassNumber = (short)(500 + doc.Classes.Count),
-				DwgVersion = (ACadVersion)22,
-				DxfName = "ACDBDICTIONARYWDFLT",
-				ItemClassId = 499,
-				MaintenanceVersion = 42,
-				ProxyFlags = ProxyFlags.R13FormatProxy,
-				WasZombie = false,
-			});
+			result.InstanceCount = this._document.GetInstanceCount(item.DxfName);
+		}
+		else
+		{
+			this.Add(item);
+		}
+	}
 
-			//AcDbPlaceHolder
-			doc.Classes.AddOrUpdate(new DxfClass
-			{
-				CppClassName = "AcDbPlaceHolder",
-				ClassNumber = (short)(500 + doc.Classes.Count),
-				DwgVersion = (ACadVersion)0,
-				DxfName = "ACDBPLACEHOLDER",
-				ItemClassId = 499,
-				MaintenanceVersion = 0,
-				ProxyFlags = ProxyFlags.None,
-				WasZombie = false,
-			});
+	/// <inheritdoc/>
+	public void Clear()
+	{
+		this._entries.Clear();
+	}
 
-			//AcDbLayout
-			doc.Classes.AddOrUpdate(new DxfClass
-			{
-				CppClassName = "AcDbLayout",
-				ClassNumber = (short)(500 + doc.Classes.Count),
-				DwgVersion = (ACadVersion)0,
-				DxfName = "LAYOUT",
-				ItemClassId = 499,
-				MaintenanceVersion = 0,
-				ProxyFlags = ProxyFlags.None,
-				WasZombie = false,
-			});
+	/// <summary>
+	/// Determines whether the Collection contains a specific <see cref="DxfClass.DxfName"/>.
+	/// </summary>
+	/// <param name="dxfname">The name of the dxf class to check.</param>
+	/// <returns>true if the Collection contains an element with the specified name; otherwise, false.</returns>
+	public bool Contains(string dxfname)
+	{
+		return this._entries.ContainsKey(dxfname);
+	}
 
-			//AcDbDictionaryVar
-			doc.Classes.AddOrUpdate(new DxfClass
-			{
-				CppClassName = "AcDbDictionaryVar",
-				ClassNumber = (short)(500 + doc.Classes.Count),
-				DwgVersion = (ACadVersion)20,
-				DxfName = "DICTIONARYVAR",
-				ItemClassId = 499,
-				MaintenanceVersion = 0,
-				ProxyFlags = ProxyFlags.None,
-				WasZombie = false,
-			});
+	/// <inheritdoc/>
+	public bool Contains(DxfClass item)
+	{
+		return this._entries.Values.Contains(item);
+	}
 
-			//AcDbTableStyle
-			doc.Classes.AddOrUpdate(new DxfClass
-			{
-				CppClassName = "AcDbTableStyle",
-				ClassNumber = (short)(500 + doc.Classes.Count),
-				DwgVersion = ACadVersion.AC1018,
-				DxfName = "TABLESTYLE",
-				ItemClassId = 499,
-				MaintenanceVersion = 0,
-				ProxyFlags = (ProxyFlags)4095,
-				WasZombie = false,
-			});
+	/// <inheritdoc/>
+	public void CopyTo(DxfClass[] array, int arrayIndex)
+	{
+		this._entries.Values.CopyTo(array, arrayIndex);
+	}
 
-			//AcDbMaterial
-			doc.Classes.AddOrUpdate(new DxfClass
-			{
-				CppClassName = "AcDbMaterial",
-				ClassNumber = (short)(500 + doc.Classes.Count),
-				DwgVersion = 0,
-				DxfName = "MATERIAL",
-				ItemClassId = 499,
-				MaintenanceVersion = 0,
-				ProxyFlags = ProxyFlags.EraseAllowed | ProxyFlags.CloningAllowed | ProxyFlags.DisablesProxyWarningDialog,
-				WasZombie = false,
-			});
+	/// <summary>
+	/// Gets the dxf class associated with <see cref="DxfClass.ClassNumber"/>.
+	/// </summary>
+	/// <param name="id"></param>
+	/// <returns></returns>
+	public DxfClass GetByClassNumber(short id)
+	{
+		return this._entries.Values.FirstOrDefault(c => c.ClassNumber == id);
+	}
 
-			//AcDbVisualStyle
-			doc.Classes.AddOrUpdate(new DxfClass
-			{
-				CppClassName = "AcDbVisualStyle",
-				ClassNumber = (short)(500 + doc.Classes.Count),
-				DwgVersion = ACadVersion.AC1021,
-				DxfName = "VISUALSTYLE",
-				ItemClassId = 499,
-				MaintenanceVersion = 0,
-				ProxyFlags = (ProxyFlags)4095,
-				WasZombie = false,
-			});
+	/// <summary>
+	/// Gets the dxf class associated with <see cref="DxfClass.DxfName"/>.
+	/// </summary>
+	/// <param name="dxfname"></param>
+	/// <returns></returns>
+	public DxfClass GetByName(string dxfname)
+	{
+		if (this._entries.TryGetValue(dxfname, out DxfClass result))
+		{
+			return result;
+		}
+		else
+		{
+			return null;
+		}
+	}
 
-			//AcDbScale
-			doc.Classes.AddOrUpdate(new DxfClass
-			{
-				CppClassName = "AcDbScale",
-				ClassNumber = (short)(500 + doc.Classes.Count),
-				DwgVersion = ACadVersion.AC1021,
-				DxfName = "SCALE",
-				ItemClassId = 499,
-				MaintenanceVersion = 1,
-				ProxyFlags = ProxyFlags.EraseAllowed | ProxyFlags.CloningAllowed | ProxyFlags.DisablesProxyWarningDialog,
-				WasZombie = false,
-			});
+	/// <inheritdoc/>
+	public IEnumerator<DxfClass> GetEnumerator()
+	{
+		return this._entries.Values.GetEnumerator();
+	}
 
-			//AcDbMLeaderStyle
-			doc.Classes.AddOrUpdate(new DxfClass
-			{
-				CppClassName = "AcDbMLeaderStyle",
-				ClassNumber = (short)(500 + doc.Classes.Count),
-				DwgVersion = ACadVersion.AC1021,
-				DxfName = "MLEADERSTYLE",
-				ItemClassId = 499,
-				MaintenanceVersion = 25,
-				ProxyFlags = (ProxyFlags)4095,
-				WasZombie = false,
-			});
+	/// <inheritdoc/>
+	IEnumerator IEnumerable.GetEnumerator()
+	{
+		return this._entries.Values.GetEnumerator();
+	}
 
-			//AcDbCellStyleMap
-			doc.Classes.AddOrUpdate(new DxfClass
-			{
-				CppClassName = "AcDbCellStyleMap",
-				ClassNumber = (short)(500 + doc.Classes.Count),
-				DwgVersion = ACadVersion.AC1021,
-				DxfName = "CELLSTYLEMAP",
-				ItemClassId = 499,
-				MaintenanceVersion = 25,
-				ProxyFlags = ProxyFlags.CloningAllowed | ProxyFlags.DisablesProxyWarningDialog,
-				WasZombie = false,
-			});
+	/// <summary>
+	/// Increases the instance count of a dxf class in the collection. If the dxf class is not present, it adds it to the collection with an initial instance count of 1.
+	/// </summary>
+	/// <param name="dxfClass">The dxf class whose instance count is to be increased.</param>
+	public void IncreaseInstanceCount(DxfClass dxfClass)
+	{
+		if (this._entries.TryGetValue(dxfClass.DxfName, out DxfClass result))
+		{
+			result.InstanceCount++;
+		}
+		else
+		{
+			this.Add(dxfClass);
+			dxfClass.InstanceCount = 1;
+		}
+	}
 
-			//ExAcXREFPanelObject
-			doc.Classes.AddOrUpdate(new DxfClass
-			{
-				CppClassName = "ExAcXREFPanelObject",
-				ClassNumber = (short)(500 + doc.Classes.Count),
-				DwgVersion = 0,
-				DxfName = "EXACXREFPANELOBJECT",
-				ItemClassId = 499,
-				MaintenanceVersion = 0,
-				ProxyFlags = ProxyFlags.EraseAllowed | ProxyFlags.DisablesProxyWarningDialog,
-				WasZombie = false,
-			});
+	/// <inheritdoc/>
+	public bool Remove(DxfClass item)
+	{
+		return this._entries.Remove(item.DxfName);
+	}
 
-			//AcDbImpNonPersistentObjectsCollection
-			doc.Classes.AddOrUpdate(new DxfClass
-			{
-				CppClassName = "AcDbImpNonPersistentObjectsCollection",
-				ClassNumber = (short)(500 + doc.Classes.Count),
-				DwgVersion = 0,
-				DxfName = "NPOCOLLECTION",
-				ItemClassId = 499,
-				MaintenanceVersion = 0,
-				ProxyFlags = ProxyFlags.EraseAllowed | ProxyFlags.CloningAllowed | ProxyFlags.DisablesProxyWarningDialog,
-				WasZombie = false,
-			});
+	/// <summary>
+	/// Resets the class numbers of all <see cref="DxfClass"/> objects in the collection to a default value starting from 500.
+	/// </summary>
+	public void ResetClassNumbers()
+	{
+		var arr = this._entries.Values.ToArray();
+		for (int i = 0; i < arr.Length; i++)
+		{
+			arr[i].ClassNumber = (short)(500 + i);
+		}
+	}
 
-			//AcDbLayerIndex
-			doc.Classes.AddOrUpdate(new DxfClass
-			{
-				CppClassName = "AcDbLayerIndex",
-				ClassNumber = (short)(500 + doc.Classes.Count),
-				DwgVersion = 0,
-				DxfName = "LAYER_INDEX",
-				ItemClassId = 499,
-				MaintenanceVersion = 0,
-				ProxyFlags = ProxyFlags.None,
-				WasZombie = false,
-			});
+	/// <summary>
+	/// Attempts to add a dxf class to the collection if the <see cref="DxfClass.DxfName"/> is not present.
+	/// </summary>
+	/// <param name="item">The dxf class to add.</param>
+	/// <returns>true if the dxf class was added successfully; otherwise, false.</returns>
+	public bool TryAdd(DxfClass item)
+	{
+		return this._entries.TryAdd(item.DxfName, item);
+	}
 
-			//AcDbSpatialIndex
-			doc.Classes.AddOrUpdate(new DxfClass
-			{
-				CppClassName = "AcDbSpatialIndex",
-				ClassNumber = (short)(500 + doc.Classes.Count),
-				DwgVersion = 0,
-				DxfName = "SPATIAL_INDEX",
-				ItemClassId = 499,
-				MaintenanceVersion = 0,
-				ProxyFlags = ProxyFlags.None,
-				WasZombie = false,
-			});
+	/// <summary>
+	/// Gets the dxf class associated with <see cref="DxfClass.ClassNumber"/>.
+	/// </summary>
+	/// <param name="id"></param>
+	/// <param name="result"></param>
+	/// <returns></returns>
+	public bool TryGetByClassNumber(short id, out DxfClass result)
+	{
+		result = this._entries.Values.FirstOrDefault(c => c.ClassNumber == id);
+		return result != null;
+	}
 
-			//AcDbIdBuffer
-			doc.Classes.AddOrUpdate(new DxfClass
-			{
-				CppClassName = "AcDbIdBuffer",
-				ClassNumber = (short)(500 + doc.Classes.Count),
-				DwgVersion = ACadVersion.AC1014,
-				DxfName = "IDBUFFER",
-				ItemClassId = 499,
-				MaintenanceVersion = 0,
-				ProxyFlags = ProxyFlags.R13FormatProxy,
-				WasZombie = false,
-			});
+	/// <summary>
+	/// Gets the dxf class associated with <see cref="DxfClass.DxfName"/>.
+	/// </summary>
+	/// <param name="dxfname"></param>
+	/// <param name="result"></param>
+	/// <returns>true if the Collection contains an element with the specified key; otherwise, false.</returns>
+	public bool TryGetByName(string dxfname, out DxfClass result)
+	{
+		return this._entries.TryGetValue(dxfname, out result);
+	}
 
-			//AcDbSectionViewStyle
-			doc.Classes.AddOrUpdate(new DxfClass
-			{
-				CppClassName = "AcDbSectionViewStyle",
-				ClassNumber = (short)(500 + doc.Classes.Count),
-				DwgVersion = 0,
-				DxfName = "ACDBSECTIONVIEWSTYLE",
-				ItemClassId = 499,
-				MaintenanceVersion = 0,
-				ProxyFlags = ProxyFlags.EraseAllowed | ProxyFlags.DisablesProxyWarningDialog,
-				WasZombie = false,
-			});
+	/// <summary>
+	/// Updates the DXF class collection in the document with a predefined set of class definitions and resets class
+	/// numbers.
+	/// </summary>
+	[Obsolete]
+	public void UpdateDxfClasses()
+	{
+		//Kept for dummy classes (future implementation)
+		this.ResetClassNumbers();
 
-			//AcDbDetailViewStyle
-			doc.Classes.AddOrUpdate(new DxfClass
-			{
-				CppClassName = "AcDbDetailViewStyle",
-				ClassNumber = (short)(500 + doc.Classes.Count),
-				DwgVersion = 0,
-				DxfName = "ACDBDETAILVIEWSTYLE",
-				ItemClassId = 499,
-				MaintenanceVersion = 0,
-				ProxyFlags = ProxyFlags.EraseAllowed | ProxyFlags.DisablesProxyWarningDialog,
-				WasZombie = false,
-			});
-
-			//AcDbSubDMesh
-			doc.Classes.AddOrUpdate(new DxfClass
-			{
-				CppClassName = "AcDbSubDMesh",
-				ClassNumber = (short)(500 + doc.Classes.Count),
-				DwgVersion = 0,
-				DxfName = "MESH",
-				ItemClassId = 498,
-				MaintenanceVersion = 0,
-				ProxyFlags = ProxyFlags.None,
-				WasZombie = false,
-			});
-
-			//AcDbSortentsTable
-			doc.Classes.AddOrUpdate(new DxfClass
-			{
-				CppClassName = "AcDbSortentsTable",
-				ClassNumber = (short)(500 + doc.Classes.Count),
-				DwgVersion = ACadVersion.AC1014,
-				DxfName = "SORTENTSTABLE",
-				ItemClassId = 499,
-				MaintenanceVersion = 0,
-				ProxyFlags = ProxyFlags.None,
-				WasZombie = false,
-			});
-
-			//AcDbTextObjectContextData
-			doc.Classes.AddOrUpdate(new DxfClass
-			{
-				CppClassName = "AcDbTextObjectContextData",
-				ClassNumber = (short)(500 + doc.Classes.Count),
-				DwgVersion = 0,
-				DxfName = "ACDB_TEXTOBJECTCONTEXTDATA_CLASS",
-				ItemClassId = 499,
-				MaintenanceVersion = 0,
-				ProxyFlags = ProxyFlags.EraseAllowed | ProxyFlags.CloningAllowed | ProxyFlags.DisablesProxyWarningDialog,
-				WasZombie = false,
-			});
-
-			//AcDbWipeout
-			doc.Classes.AddOrUpdate(new DxfClass
-			{
-				ApplicationName = "WipeOut",
-				CppClassName = "AcDbWipeout",
-				ClassNumber = (short)(500 + doc.Classes.Count),
-				DwgVersion = ACadVersion.AC1015,
-				DxfName = "WIPEOUT",
-				ItemClassId = 498,
-				MaintenanceVersion = 0,
-				ProxyFlags = ProxyFlags.EraseAllowed | ProxyFlags.TransformAllowed | ProxyFlags.ColorChangeAllowed | ProxyFlags.LayerChangeAllowed | ProxyFlags.LinetypeChangeAllowed | ProxyFlags.LinetypeScaleChangeAllowed | ProxyFlags.VisibilityChangeAllowed | ProxyFlags.R13FormatProxy,
-				WasZombie = false,
-			});
-
-			//AcDbWipeoutVariables
-			doc.Classes.AddOrUpdate(new DxfClass
-			{
-				ApplicationName = "WipeOut",
-				CppClassName = "AcDbWipeoutVariables",
-				ClassNumber = (short)(500 + doc.Classes.Count),
-				DwgVersion = ACadVersion.AC1015,
-				DxfName = "WIPEOUTVARIABLES",
-				ItemClassId = 499,
-				MaintenanceVersion = 0,
-				ProxyFlags = ProxyFlags.R13FormatProxy,
-				WasZombie = false,
-			});
-
-			//AcDbDimAssoc
-			doc.Classes.AddOrUpdate(new DxfClass
-			{
-				ApplicationName = "AcDbDimAssoc",
-				CppClassName = "AcDbDimAssoc",
-				ClassNumber = (short)(500 + doc.Classes.Count),
-				DwgVersion = 0,
-				DxfName = "DIMASSOC",
-				ItemClassId = 499,
-				MaintenanceVersion = 0,
-				ProxyFlags = ProxyFlags.None,
-				WasZombie = false,
-			});
-
-			//AcDbTable
-			doc.Classes.AddOrUpdate(new DxfClass
-			{
-				CppClassName = "AcDbTable",
-				ClassNumber = (short)(500 + doc.Classes.Count),
-				DwgVersion = ACadVersion.AC1018,
-				DxfName = "ACAD_TABLE",
-				ItemClassId = 498,
-				MaintenanceVersion = 0,
-				ProxyFlags = ProxyFlags.EraseAllowed | ProxyFlags.DisablesProxyWarningDialog,
-				WasZombie = false,
-			});
-
-			//AcDbTableContent
-			doc.Classes.AddOrUpdate(new DxfClass
-			{
-				CppClassName = "AcDbTableContent",
-				ClassNumber = (short)(500 + doc.Classes.Count),
-				DwgVersion = ACadVersion.AC1018,
-				DxfName = "TABLECONTENT",
-				ItemClassId = 499,
-				MaintenanceVersion = 21,
-				ProxyFlags = ProxyFlags.CloningAllowed | ProxyFlags.DisablesProxyWarningDialog,
-				WasZombie = false,
-			});
-
-			//AcDbTableGeometry
-			doc.Classes.AddOrUpdate(new DxfClass
-			{
-				CppClassName = "AcDbTableGeometry",
-				ClassNumber = (short)(500 + doc.Classes.Count),
-				DwgVersion = 0,
-				DxfName = "TABLEGEOMETRY",
-				ItemClassId = 499,
-				MaintenanceVersion = 0,
-				ProxyFlags = ProxyFlags.CloningAllowed | ProxyFlags.DisablesProxyWarningDialog,
-				WasZombie = false,
-			});
-
-			//AcDbRasterImage
-			doc.Classes.AddOrUpdate(new DxfClass
-			{
-				CppClassName = DxfSubclassMarker.RasterImage,
-				ClassNumber = (short)(500 + doc.Classes.Count),
-				DwgVersion = ACadVersion.AC1014,
-				DxfName = DxfFileToken.EntityImage,
-				ItemClassId = 498,
-				MaintenanceVersion = 0,
-				ProxyFlags = ProxyFlags.EraseAllowed | ProxyFlags.TransformAllowed | ProxyFlags.ColorChangeAllowed | ProxyFlags.LayerChangeAllowed | ProxyFlags.LinetypeChangeAllowed | ProxyFlags.LinetypeScaleChangeAllowed | ProxyFlags.VisibilityChangeAllowed | ProxyFlags.R13FormatProxy,
+		//AcDbCellStyleMap
+		this.AddOrUpdate(new DxfClass
+		{
+			CppClassName = DxfSubclassMarker.CellStyleMap,
+			ClassNumber = (short)(500 + this.Count),
+			DwgVersion = ACadVersion.AC1021,
+			DxfName = DxfFileToken.ObjectCellStyleMap,
+			ItemClassId = 499,
+			MaintenanceVersion = 25,
+			ProxyFlags = ProxyFlags.CloningAllowed | ProxyFlags.DisablesProxyWarningDialog,
 			WasZombie = false,
-			});
+			InstanceCount = this._document.GetInstanceCount(DxfFileToken.ObjectCellStyleMap),
+		});
 
-			//AcDbRasterImageDef
-			doc.Classes.AddOrUpdate(new DxfClass
-			{
-				CppClassName = DxfSubclassMarker.RasterImageDef,
-				ClassNumber = (short)(500 + doc.Classes.Count),
-				DwgVersion = ACadVersion.AC1014,
-				DxfName = DxfFileToken.ObjectImageDefinition,
-				ItemClassId = 499,
-				MaintenanceVersion = 0,
-				ProxyFlags = ProxyFlags.R13FormatProxy,
-				WasZombie = false,
-			});
-		}
-
-		/// <summary>
-		/// Add a dxf class to the collection if the <see cref="DxfClass.DxfName"/> is not present
-		/// </summary>
-		/// <param name="item"></param>
-		public void Add(DxfClass item)
+		//ExAcXREFPanelObject
+		this.AddOrUpdate(new DxfClass
 		{
-			this._entries.Add(item.DxfName, item);
-		}
+			CppClassName = "ExAcXREFPanelObject",
+			ClassNumber = (short)(500 + this.Count),
+			DwgVersion = 0,
+			DxfName = "EXACXREFPANELOBJECT",
+			ItemClassId = 499,
+			MaintenanceVersion = 0,
+			ProxyFlags = ProxyFlags.EraseAllowed | ProxyFlags.DisablesProxyWarningDialog,
+			WasZombie = false,
+			InstanceCount = this._document.GetInstanceCount("EXACXREFPANELOBJECT"),
+		});
 
-		/// <summary>
-		/// Add a dxf class to the collection or updates the existing one if the <see cref="DxfClass.DxfName"/> is already in the collection
-		/// </summary>
-		/// <param name="item"></param>
-		public void AddOrUpdate(DxfClass item)
+		//AcDbImpNonPersistentObjectsCollection
+		this.AddOrUpdate(new DxfClass
 		{
-			if (_entries.TryGetValue(item.DxfName, out DxfClass result))
-			{
-				result.InstanceCount = item.InstanceCount;
-			}
-			else
-			{
-				_entries.Add(item.DxfName, item);
-			}
-		}
+			CppClassName = "AcDbImpNonPersistentObjectsCollection",
+			ClassNumber = (short)(500 + this.Count),
+			DwgVersion = 0,
+			DxfName = "NPOCOLLECTION",
+			ItemClassId = 499,
+			MaintenanceVersion = 0,
+			ProxyFlags = ProxyFlags.EraseAllowed | ProxyFlags.CloningAllowed | ProxyFlags.DisablesProxyWarningDialog,
+			WasZombie = false,
+			InstanceCount = this._document.GetInstanceCount("NPOCOLLECTION"),
+		});
 
-		/// <summary>
-		/// Gets the dxf class associated with <see cref="DxfClass.DxfName"/>
-		/// </summary>
-		/// <param name="dxfname"></param>
-		/// <returns></returns>
-		public DxfClass GetByName(string dxfname)
+		//AcDbLayerIndex
+		this.AddOrUpdate(new DxfClass
 		{
-			if (this._entries.TryGetValue(dxfname, out DxfClass result))
-			{
-				return result;
-			}
-			else
-			{
-				return null;
-			}
-		}
+			CppClassName = "AcDbLayerIndex",
+			ClassNumber = (short)(500 + this.Count),
+			DwgVersion = 0,
+			DxfName = "LAYER_INDEX",
+			ItemClassId = 499,
+			MaintenanceVersion = 0,
+			ProxyFlags = ProxyFlags.None,
+			WasZombie = false,
+			InstanceCount = this._document.GetInstanceCount("LAYER_INDEX"),
+		});
 
-		/// <summary>
-		/// Gets the dxf class associated with <see cref="DxfClass.DxfName"/>
-		/// </summary>
-		/// <param name="dxfname"></param>
-		/// <param name="result"></param>
-		/// <returns>true if the Collection contains an element with the specified key; otherwise, false.</returns>
-		public bool TryGetByName(string dxfname, out DxfClass result)
+		//AcDbSpatialIndex
+		this.AddOrUpdate(new DxfClass
 		{
-			return this._entries.TryGetValue(dxfname, out result);
-		}
+			CppClassName = "AcDbSpatialIndex",
+			ClassNumber = (short)(500 + this.Count),
+			DwgVersion = 0,
+			DxfName = "SPATIAL_INDEX",
+			ItemClassId = 499,
+			MaintenanceVersion = 0,
+			ProxyFlags = ProxyFlags.None,
+			WasZombie = false,
+			InstanceCount = this._document.GetInstanceCount("SPATIAL_INDEX"),
+		});
 
-		/// <inheritdoc/>
-		public void Clear()
+		//AcDbIdBuffer
+		this.AddOrUpdate(new DxfClass
 		{
-			_entries.Clear();
-		}
+			CppClassName = "AcDbIdBuffer",
+			ClassNumber = (short)(500 + this.Count),
+			DwgVersion = ACadVersion.AC1014,
+			DxfName = "IDBUFFER",
+			ItemClassId = 499,
+			MaintenanceVersion = 0,
+			ProxyFlags = ProxyFlags.R13FormatProxy,
+			WasZombie = false,
+			InstanceCount = this._document.GetInstanceCount("IDBUFFER"),
+		});
 
-		/// <summary>
-		/// Determines whether the Collection contains a specific <see cref="DxfClass.DxfName"/>
-		/// </summary>
-		/// <param name="dxfname"></param>
-		/// <returns></returns>
-		public bool Contains(string dxfname)
+		//AcDbSectionViewStyle
+		this.AddOrUpdate(new DxfClass
 		{
-			return this._entries.ContainsKey(dxfname);
-		}
+			CppClassName = "AcDbSectionViewStyle",
+			ClassNumber = (short)(500 + this.Count),
+			DwgVersion = 0,
+			DxfName = "ACDBSECTIONVIEWSTYLE",
+			ItemClassId = 499,
+			MaintenanceVersion = 0,
+			ProxyFlags = ProxyFlags.EraseAllowed | ProxyFlags.DisablesProxyWarningDialog,
+			WasZombie = false,
+			InstanceCount = this._document.GetInstanceCount("ACDBSECTIONVIEWSTYLE"),
+		});
 
-		/// <inheritdoc/>
-		public bool Contains(DxfClass item)
+		//AcDbDetailViewStyle
+		this.AddOrUpdate(new DxfClass
 		{
-			return _entries.Values.Contains(item);
-		}
+			CppClassName = "AcDbDetailViewStyle",
+			ClassNumber = (short)(500 + this.Count),
+			DwgVersion = 0,
+			DxfName = "ACDBDETAILVIEWSTYLE",
+			ItemClassId = 499,
+			MaintenanceVersion = 0,
+			ProxyFlags = ProxyFlags.EraseAllowed | ProxyFlags.DisablesProxyWarningDialog,
+			WasZombie = false,
+			InstanceCount = this._document.GetInstanceCount("ACDBDETAILVIEWSTYLE"),
+		});
 
-		/// <inheritdoc/>
-		public void CopyTo(DxfClass[] array, int arrayIndex)
+		//AcDbTextObjectContextData
+		this.AddOrUpdate(new DxfClass
 		{
-			throw new NotImplementedException();
-		}
+			CppClassName = "AcDbTextObjectContextData",
+			ClassNumber = (short)(500 + this.Count),
+			DwgVersion = 0,
+			DxfName = "ACDB_TEXTOBJECTCONTEXTDATA_CLASS",
+			ItemClassId = 499,
+			MaintenanceVersion = 0,
+			ProxyFlags = ProxyFlags.EraseAllowed | ProxyFlags.CloningAllowed | ProxyFlags.DisablesProxyWarningDialog,
+			WasZombie = false,
+			InstanceCount = this._document.GetInstanceCount("ACDB_TEXTOBJECTCONTEXTDATA_CLASS"),
+		});
 
-		/// <inheritdoc/>
-		public IEnumerator<DxfClass> GetEnumerator()
+		//AcDbTableGeometry
+		this.AddOrUpdate(new DxfClass
 		{
-			return _entries.Values.GetEnumerator();
-		}
-
-		/// <inheritdoc/>
-		public bool Remove(DxfClass item)
-		{
-			return this._entries.Remove(item.DxfName);
-		}
-
-		/// <inheritdoc/>
-		IEnumerator IEnumerable.GetEnumerator()
-		{
-			return this._entries.Values.GetEnumerator();
-		}
+			CppClassName = "AcDbTableGeometry",
+			ClassNumber = (short)(500 + this.Count),
+			DwgVersion = 0,
+			DxfName = "TABLEGEOMETRY",
+			ItemClassId = 499,
+			MaintenanceVersion = 0,
+			ProxyFlags = ProxyFlags.CloningAllowed | ProxyFlags.DisablesProxyWarningDialog,
+			WasZombie = false,
+			InstanceCount = this._document.GetInstanceCount("TABLEGEOMETRY"),
+		});
 	}
 }

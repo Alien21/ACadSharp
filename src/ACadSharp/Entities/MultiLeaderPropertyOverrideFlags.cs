@@ -102,10 +102,7 @@ namespace ACadSharp.Entities
 		TextFrame = 0x20000,
 
 		/// <summary>
-		/// Override <see>
-		///     <cref>MultiLeaderStyle.??</cref>
-		/// </see>
-		/// property.
+		/// Override <see cref="MultiLeaderStyle.??" /> property.
 		/// </summary>
 		EnableUseDefaultMText = 0x40000,
 
@@ -134,7 +131,6 @@ namespace ACadSharp.Entities
 		/// </summary>
 		BlockContentConnection = 0x800000,
 
-
 		/// <summary>
 		/// Override <see cref="MultiLeaderStyle.ScaleFactor"/> property.
 		/// </summary>
@@ -145,12 +141,9 @@ namespace ACadSharp.Entities
 		/// </summary>
 		TextRightAttachment = 0x2000000,
 
-		///  <summary>
-		/// 	Override <see>
-		///         <cref>MultiLeaderStyle.?? which</cref>
-		///     </see>
-		///     property.
-		///  </summary>
+		/// <summary>
+		///	Override <see cref="MultiLeaderStyle.?? which"/> property.
+		/// </summary>
 		TextSwitchAlignmentType = 0x4000000,
 
 		/// <summary>
