@@ -101,11 +101,12 @@ namespace ACadSharp
 
 			_cache.TryAdd(type, map);
 
-			if (tryGetFromCache(type, out map))
+			if (tryGetFromCache(type, out var cachedMap))
 			{
-				return map;
+				return cachedMap;
 			}
 
+			// Another reader may clear the cache; retain the map just constructed.
 			return map;
 		}
 

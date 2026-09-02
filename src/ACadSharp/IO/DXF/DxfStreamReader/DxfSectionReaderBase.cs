@@ -176,7 +176,7 @@ internal abstract class DxfSectionReaderBase
 			case DxfFileToken.Entity3DFace:
 				return this.readEntityCodes<Face3D>(new CadEntityTemplate<Face3D>(), this.readEntitySubclassMap);
 			case DxfFileToken.EntityEllipse:
-				return this.readEntityCodes<Ellipse>(new CadEntityTemplate<Ellipse>(), this.readEntitySubclassMap);
+				return this.readEllipse();
 			case DxfFileToken.EntityLeader:
 				return this.readEntityCodes<Leader>(new CadLeaderTemplate(), this.readLeader);
 			case DxfFileToken.EntityLine:
@@ -264,6 +264,53 @@ internal abstract class DxfSectionReaderBase
 
 				return unknownEntityTemplate;
 		}
+	}
+
+	private CadEntityTemplate readEllipse()
+	{
+		var template = new CadEntityTemplate<Ellipse>();
+		double? reversedRatio = null;
+		this.readEntityCodes<Ellipse>(template, (entity, map, subclass) =>
+		{
+			if (this._reader.Code == 40)
+			{
+				double ratio = this._reader.ValueAsDouble;
+				if (ratio > 1 && !double.IsInfinity(ratio))
+				{
+					// Some legacy producers stored width/height instead of major/minor.
+					// Wait for the axis, normal and parameters, which may follow this tag.
+					reversedRatio = ratio;
+					return true;
+				}
+
+				reversedRatio = null;
+			}
+
+			// Keep normal values and invalid-value validation on the original path.
+			return this.readEntitySubclassMap(entity, map, subclass);
+		});
+
+		if (reversedRatio.HasValue)
+		{
+			var ellipse = template.CadObject;
+			double span = ellipse.EndParameter - ellipse.StartParameter;
+			ellipse.MajorAxisEndPoint = XYZ.Cross(ellipse.Normal.Normalize(), ellipse.MajorAxisEndPoint) * reversedRatio.Value;
+			ellipse.RadiusRatio = 1.0 / reversedRatio.Value;
+			if (Math.Abs(Math.Abs(span) - 2 * Math.PI) <= 1e-12)
+			{
+				ellipse.StartParameter = 0;
+				ellipse.EndParameter = 2 * Math.PI;
+			}
+			else
+			{
+				ellipse.StartParameter -= Math.PI / 2;
+				ellipse.EndParameter -= Math.PI / 2;
+			}
+
+			this._builder.Notify($"[ELLIPSE] Reversed axes normalized for entity {ellipse.Handle:X}.", NotificationType.Warning);
+		}
+
+		return template;
 	}
 
 	protected CadEntityTemplate readEntityCodes<T>(CadEntityTemplate template, ReadEntityDelegate<T> readEntity)
@@ -1004,8 +1051,7 @@ internal abstract class DxfSectionReaderBase
 
 	private CadEntityTemplate readPolyline()
 	{
-		if (this._builder.Version == ACadVersion.Unknown
-			|| this._builder.Version == ACadVersion.AC1009)
+		if (this._builder.Version < ACadVersion.AC1012)
 		{
 			return this.readLegacyPolyline();
 		}
@@ -1056,6 +1102,12 @@ internal abstract class DxfSectionReaderBase
 		var polyline = new Polyline2D();
 		CadPolyLineTemplate template = new CadPolyLineTemplate(polyline);
 		this.readEntityCodes<Polyline2D>(template, this.readPolyline);
+
+		if ((polyline.Flags & (PolylineFlags.Polyline3D | PolylineFlags.PolygonMesh | PolylineFlags.PolyfaceMesh)) != 0)
+		{
+			this._builder.Notify($"[{DxfFileToken.EntityPolyline}] Legacy 3D polylines, polygon meshes and polyface meshes are not supported, entity discarded", NotificationType.Warning);
+			return null;
+		}
 
 		while (this._reader.Code == 0 && this._reader.ValueAsString == DxfFileToken.EntityVertex)
 		{
