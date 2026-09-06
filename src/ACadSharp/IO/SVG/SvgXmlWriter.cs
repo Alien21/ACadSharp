@@ -1,4 +1,4 @@
-﻿using ACadSharp.Entities;
+using ACadSharp.Entities;
 using ACadSharp.Extensions;
 using ACadSharp.Objects;
 using ACadSharp.Tables;
@@ -29,10 +29,12 @@ namespace ACadSharp.IO.SVG
 		{
 		}
 
+#nullable enable annotations
 		public SvgXmlWriter(Stream stream, Encoding? encoding, SvgConfiguration configuration) : base(stream, encoding)
 		{
 			this.Configuration = configuration;
 		}
+#nullable restore annotations
 
 		public void WriteAttributeString(string localName, double value)
 		{
@@ -396,6 +398,7 @@ namespace ACadSharp.IO.SVG
 
 				return;
 
+#if false // Preserve the current polyline fallback and the inactive path draft.
 				//TODO: Fix the ellipse generation
 				this.WriteStartElement("path");
 
@@ -408,6 +411,7 @@ namespace ACadSharp.IO.SVG
 
 				this.WriteAttributeString("fill", "none");
 				this.WriteEndElement();
+#endif
 			}
 		}
 
@@ -581,6 +585,7 @@ namespace ACadSharp.IO.SVG
 				//Line
 				this.WriteEndElement();
 
+#if false // Optional pattern-debug outlines remain disabled.
 				if (false)
 				{
 					this.WriteStartElement("rect");
@@ -590,6 +595,7 @@ namespace ACadSharp.IO.SVG
 					this.WriteAttributeString("stroke", $"red");
 					this.WriteEndElement();
 				}
+#endif
 
 				//Pattern
 				this.WriteEndElement();

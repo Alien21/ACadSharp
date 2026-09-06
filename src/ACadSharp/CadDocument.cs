@@ -1,4 +1,4 @@
-﻿using ACadSharp.Classes;
+using ACadSharp.Classes;
 using ACadSharp.Entities;
 using ACadSharp.Header;
 using ACadSharp.Objects;
@@ -508,6 +508,7 @@ public class CadDocument : IHandledCadObject
 	/// Updates the collections in the document and link them to it's dictionary.
 	/// </summary>
 	/// <param name="createDictionaries"></param>
+	/// <param name="createDefaults"></param>
 	public void UpdateCollections(bool createDictionaries, bool createDefaults)
 	{
 		if (createDictionaries && this.RootDictionary == null)

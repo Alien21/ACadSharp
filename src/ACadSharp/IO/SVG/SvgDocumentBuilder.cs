@@ -1,4 +1,4 @@
-﻿using ACadSharp.Extensions;
+using ACadSharp.Extensions;
 using ACadSharp.Objects;
 using ACadSharp.Tables;
 using CSMath;
@@ -22,7 +22,7 @@ namespace ACadSharp.IO.SVG
 		{
 		}
 
-		public void WriteLayout(Layout layout)
+		public new void WriteLayout(Layout layout)
 		{
 			this.Units = layout.PaperUnits.ToUnits();
 

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using ACadSharp.Attributes;
 using ACadSharp.Classes;
 using ACadSharp.Entities;
@@ -540,7 +540,7 @@ public class MultiLeaderStyle : NonGraphicalObject, IDxfClassDefined
 	/// </para><para>
 	/// The value for all leader lines can be overridden for each individual leader line by the
 	/// <see cref="MultiLeaderObjectContextData.LeaderRoot.TextAttachmentDirection"/> property when the
-	/// <see cref="LeaderLinePropertOverrideFlags.TextAttachmentDirection"/> flag is set in the
+	/// <c>LeaderLinePropertOverrideFlags.TextAttachmentDirection</c> flag is set in the
 	/// <see cref="MultiLeaderObjectContextData.LeaderLine.OverrideFlags"/> property.
 	/// </para>
 	/// </remarks>

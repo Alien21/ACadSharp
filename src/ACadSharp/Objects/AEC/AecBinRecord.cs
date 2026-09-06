@@ -36,5 +36,5 @@ public class AecBinRecord : NonGraphicalObject
 	/// <summary>
 	/// Optional name/identifier for this binary record.
 	/// </summary>
-	public string Name { get; set; }
+	public new string Name { get; set; }
 }

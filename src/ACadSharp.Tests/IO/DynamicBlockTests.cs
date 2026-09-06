@@ -1,4 +1,4 @@
-﻿using ACadSharp.Entities;
+using ACadSharp.Entities;
 using ACadSharp.IO;
 using ACadSharp.Objects;
 using ACadSharp.Objects.Evaluations;
@@ -120,9 +120,8 @@ public class DynamicBlockTests : IOTestsBase
 			var dict = insert.XDictionary.GetEntry<CadDictionary>("AcDbBlockRepresentation");
 			var representation = dict.GetEntry<BlockRepresentationData>("AcDbRepData");
 
-			Assert.NotEmpty(insert.Block.Source.EvaluationGraph.Nodes
-				.Select(n => n.Expression)
-				.Where(e => e.GetType() == parameterType));
+			Assert.Contains(insert.Block.Source.EvaluationGraph.Nodes.Select(n => n.Expression),
+				e => e.GetType() == parameterType);
 
 			Assert.NotNull(representation);
 			Assert.Equal(original, representation.Block);

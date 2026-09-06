@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 
 namespace ACadSharp.Exceptions
 {
@@ -9,6 +9,7 @@ namespace ACadSharp.Exceptions
 
 		public DwgException(string message, Exception inner) : base(message, inner) { }
 
+		[Obsolete("Formatter-based serialization is obsolete.")]
 		protected DwgException(
 		  System.Runtime.Serialization.SerializationInfo info,
 		  System.Runtime.Serialization.StreamingContext context) : base(info, context) { }

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using ACadSharp.Objects;
 
 namespace ACadSharp.Entities
@@ -102,7 +102,7 @@ namespace ACadSharp.Entities
 		TextFrame = 0x20000,
 
 		/// <summary>
-		/// Override <see cref="MultiLeaderStyle.??" /> property.
+		/// Override <c>MultiLeaderStyle.??</c> property.
 		/// </summary>
 		EnableUseDefaultMText = 0x40000,
 
@@ -142,7 +142,7 @@ namespace ACadSharp.Entities
 		TextRightAttachment = 0x2000000,
 
 		/// <summary>
-		///	Override <see cref="MultiLeaderStyle.?? which"/> property.
+		///	Override <c>MultiLeaderStyle.?? which</c> property.
 		/// </summary>
 		TextSwitchAlignmentType = 0x4000000,
 

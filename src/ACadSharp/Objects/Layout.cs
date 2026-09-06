@@ -1,4 +1,4 @@
-﻿using ACadSharp.Attributes;
+using ACadSharp.Attributes;
 using ACadSharp.Classes;
 using ACadSharp.Entities;
 using ACadSharp.Tables;
@@ -267,7 +267,7 @@ public class Layout : PlotSettings, IDxfClassDefined
 	}
 
 	/// <inheritdoc/>
-	public DxfClass GetDxfClass()
+	public new DxfClass GetDxfClass()
 	{
 		return new DxfClass
 		{

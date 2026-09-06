@@ -1,4 +1,4 @@
-﻿using ACadSharp.Header;
+using ACadSharp.Header;
 using CSUtilities.IO;
 using CSUtilities.Converters;
 using CSUtilities.Text;
@@ -315,7 +315,7 @@ public class DwgReader : CadReaderBase<DwgReaderConfiguration>
 
 		//Relative to data page map 1, add 0x480 to get stream position
 		stream.Position = (long)(0x480 + pageOffset);
-		stream.Read(buffer, 0, lenght);
+		CSUtilities.Extensions.StreamExtensions.ReadExactly(stream, buffer, 0, lenght);
 
 		byte[] compressedData = new byte[(int)totalSize];
 		this.reedSolomonDecoding(buffer, compressedData, factor, blockSize);
@@ -383,7 +383,7 @@ public class DwgReader : CadReaderBase<DwgReaderConfiguration>
 				{
 					//Read the stream normally
 					byte[] buffer = new byte[section.CompressedSize];
-					sreader.Stream.Read(buffer, 0, (int)section.CompressedSize);
+					CSUtilities.Extensions.StreamExtensions.ReadExactly(sreader.Stream, buffer, 0, (int)section.CompressedSize);
 					memoryStream.Write(buffer, 0, (int)section.CompressedSize);
 				}
 			}
@@ -426,7 +426,7 @@ public class DwgReader : CadReaderBase<DwgReaderConfiguration>
 
 				//Get the page data
 				byte[] pageBytes = new byte[pageData.Size];
-				this._fileStream.Stream.Read(pageBytes, 0, (int)pageData.Size);
+				CSUtilities.Extensions.StreamExtensions.ReadExactly(this._fileStream.Stream, pageBytes, 0, (int)pageData.Size);
 
 				if (section.Encoding == 4)
 				{

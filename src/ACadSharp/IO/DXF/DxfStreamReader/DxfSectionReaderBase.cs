@@ -1,4 +1,4 @@
-﻿using ACadSharp.Entities;
+using ACadSharp.Entities;
 using ACadSharp.IO.Templates;
 using ACadSharp.Objects;
 using ACadSharp.Tables;
@@ -377,7 +377,7 @@ internal abstract class DxfSectionReaderBase
 		}
 	}
 
-	[Obsolete("use lockpointer instead")]
+	// TODO: use lockpointer instead.
 	protected bool checkObjectEnd(CadTemplate template, DxfMap map, Func<CadTemplate, DxfMap, bool> func)
 	{
 		if (this._reader.DxfCode == DxfCode.Start)

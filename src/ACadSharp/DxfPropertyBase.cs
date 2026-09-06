@@ -1,4 +1,4 @@
-﻿using ACadSharp.Attributes;
+using ACadSharp.Attributes;
 using ACadSharp.Objects;
 using CSMath;
 using CSUtilities.Converters;
@@ -63,6 +63,7 @@ namespace ACadSharp
 
 				return;
 
+#if false // Retain the inactive validation draft without changing accepted values.
 				//Does it need a validation??
 				switch (this.GroupCode)
 				{
@@ -116,6 +117,7 @@ namespace ACadSharp
 					default:
 						throw new ArgumentException($"Invalid type {value.GetType()} for group code {this.GroupCode}");
 				}
+#endif
 			}
 		}
 

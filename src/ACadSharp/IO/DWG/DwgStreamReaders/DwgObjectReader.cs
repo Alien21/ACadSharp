@@ -1,4 +1,4 @@
-﻿using ACadSharp.Blocks;
+using ACadSharp.Blocks;
 using ACadSharp.Classes;
 using ACadSharp.Entities;
 using ACadSharp.Entities.AecObjects;
@@ -6437,7 +6437,7 @@ namespace ACadSharp.IO.DWG
 			//Horiz dir BD 51 See DXF documentation.
 			dimension.HorizontalDirection = this._objectReader.ReadBitDouble();
 
-			///<see cref="DwgObjectWriter.writeCommonDimensionData"></see>
+			// See DwgObjectWriter.writeCommonDimensionData.
 			//TODO: readDimension insert scale and rotation not implemented
 
 			//Ins X - scale BD 41 Undoc'd. These apply to the insertion of the
@@ -6479,7 +6479,7 @@ namespace ACadSharp.IO.DWG
 			dimension.InsertionPoint = new XYZ((double)pt.X, (double)pt.Y, elevation);
 		}
 
-		[Obsolete("Can be moved to the common dimension data")]
+		// TODO: Can be moved to the common dimension data.
 		private void readCommonDimensionHandles(CadDimensionTemplate template)
 		{
 			//Common Entity Handle Data

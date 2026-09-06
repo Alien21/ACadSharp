@@ -1,4 +1,4 @@
-﻿using CSUtilities.Extensions;
+using CSUtilities.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -18,7 +18,6 @@ namespace ACadSharp.Text
 			StringBuilder sb = new StringBuilder();
 
 			int index = 0;
-			bool openGroup = false;
 			while (index < text.Length)
 			{
 				char? prev = text.TryGet(index - 1);
@@ -65,12 +64,10 @@ namespace ACadSharp.Text
 				}
 				else if (current == '{' && prev != '\\')
 				{
-					openGroup = true;
 					index++;
 				}
 				else if (current == '}' && prev != '\\')
 				{
-					openGroup = false;
 					index++;
 				}
 				else

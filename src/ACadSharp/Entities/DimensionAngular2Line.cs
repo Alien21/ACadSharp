@@ -1,4 +1,4 @@
-﻿using ACadSharp.Attributes;
+using ACadSharp.Attributes;
 using CSMath;
 using CSMath.Geometry;
 
@@ -139,6 +139,7 @@ namespace ACadSharp.Entities
 			//Needs a lot more investigation
 			return;
 
+#if false // Keep the unfinished block-generation draft inactive.
 			base.UpdateBlock();
 
 			var v1 = this.SecondPoint - this.FirstPoint;
@@ -158,6 +159,7 @@ namespace ACadSharp.Entities
 			var endAngle = XYZ.AxisX.AngleBetweenVectors(this.FirstPoint);
 
 			this._block.Entities.Add(new Arc(this.Center, this.Offset, startAngle, endAngle));
+#endif
 		}
 	}
 }

@@ -1,4 +1,4 @@
-﻿using ACadSharp.Blocks;
+using ACadSharp.Blocks;
 using ACadSharp.Entities;
 using ACadSharp.Extensions;
 using ACadSharp.Objects;
@@ -932,6 +932,7 @@ public abstract class WriterSingleObjectTests : IOTestsBase
 		{
 			return;
 
+#if false // Preserve the disabled angular-dimension test setup.
 			DimensionAngular3Pt dim = new DimensionAngular3Pt();
 			dim.FirstPoint = XYZ.AxisY;
 			dim.SecondPoint = XYZ.AxisX;
@@ -942,6 +943,7 @@ public abstract class WriterSingleObjectTests : IOTestsBase
 			this.Document.Entities.Add(dim);
 
 			dim.UpdateBlock();
+#endif
 		}
 
 		public void DimensionArc()

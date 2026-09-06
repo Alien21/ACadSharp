@@ -1,4 +1,4 @@
-﻿using ACadSharp.Classes;
+using ACadSharp.Classes;
 using ACadSharp.Entities;
 using ACadSharp.IO.Templates;
 using ACadSharp.Objects;
@@ -3114,7 +3114,9 @@ internal class DxfObjectsSectionReader : DxfSectionReaderBase
 			default:
 				//Avoid noise while is not implemented
 				return true;
+#if false // Keep unsupported visual-style assignment inactive.
 				return this.tryAssignCurrentValue(template.CadObject, map.SubClasses[DxfSubclassMarker.VisualStyle]);
+#endif
 		}
 	}
 

@@ -1,4 +1,4 @@
-﻿using ACadSharp.Attributes;
+using ACadSharp.Attributes;
 using ACadSharp.Extensions;
 
 namespace ACadSharp.Entities;
@@ -46,6 +46,7 @@ public abstract class AttributeBase : TextEntity
 			this._tag = value;
 			return;
 
+#if false // Tag validation is intentionally not applied.
 			//TODO: explore AttributeBase tag constrain
 			if (value == null)
 				throw new System.ArgumentNullException(nameof(value));
@@ -54,6 +55,7 @@ public abstract class AttributeBase : TextEntity
 				throw new System.ArgumentException($"Attribute Tag {value} cannot contain spaces", nameof(value));
 
 			this._tag = value;
+#endif
 		}
 	}
 

@@ -1,4 +1,4 @@
-﻿using CSUtilities.Text;
+using CSUtilities.Text;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -225,7 +225,7 @@ internal static class CadUtils
 #endif
 			return Encoding.GetEncoding((int)code);
 		}
-		catch (Exception ex)
+		catch (Exception)
 		{
 		}
 

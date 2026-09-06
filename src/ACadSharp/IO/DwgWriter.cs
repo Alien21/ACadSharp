@@ -1,4 +1,4 @@
-﻿using ACadSharp.Exceptions;
+using ACadSharp.Exceptions;
 using ACadSharp.IO.DWG;
 using ACadSharp.IO.DWG.DwgStreamWriters;
 using ACadSharp.Tables.Collections;
@@ -70,6 +70,7 @@ public class DwgWriter : CadWriterBase<DwgWriterConfiguration>
 	/// </summary>
 	/// <param name="stream"></param>
 	/// <param name="document"></param>
+	/// <param name="configuration"></param>
 	/// <param name="notification"></param>
 	public static void Write(Stream stream, CadDocument document, DwgWriterConfiguration configuration = null, NotificationEventHandler notification = null)
 	{
@@ -357,7 +358,7 @@ public class DwgWriter : CadWriterBase<DwgWriterConfiguration>
 
 	private void writeSummaryInfo()
 	{
-		///<see cref="DwgReader.ReadSummaryInfo"/>
+		// See DwgReader.ReadSummaryInfo.
 
 		if (this._fileHeader.AcadVersion < ACadVersion.AC1018)
 			return;
