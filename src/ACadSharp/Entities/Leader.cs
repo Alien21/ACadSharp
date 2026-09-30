@@ -209,7 +209,7 @@ public class Leader : Entity, IOrientable
 			//   (null, null)   → true  → already skipped above (over would be null)
 			//   (null, value)  → false → include (null→value: new assignment)
 			//   (value, value) → delegates to curr.Equals(over)
-			if (!object.Equals(curr, over))
+			if (!Equals(curr, over))
 			{
 				item.Value.StoredValue = over;
 				overrideMap.DxfProperties.Add(item.Key, item.Value);

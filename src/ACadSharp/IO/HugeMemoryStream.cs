@@ -37,7 +37,7 @@ namespace ACadSharp.IO
 			long lengthLeft = length;
 			while (lengthLeft > 0)
 			{
-				int chunkSize = (int)System.Math.Min(lengthLeft, _maxChunkSize);
+				int chunkSize = (int)Math.Min(lengthLeft, _maxChunkSize);
 				this._chunks.Add(new byte[chunkSize]);
 				lengthLeft -= chunkSize;
 			}
@@ -71,7 +71,7 @@ namespace ACadSharp.IO
 
 		public override void Flush()
 		{
-			throw new System.NotImplementedException();
+			throw new NotImplementedException();
 		}
 
 		public override int Read(byte[] buffer, int offset, int count)

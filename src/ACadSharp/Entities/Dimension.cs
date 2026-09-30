@@ -101,9 +101,9 @@ public abstract class Dimension : Entity, IOrientable
 	{
 		get
 		{
-			if (this.ExtendedData.TryGet(AppId.DefaultName, out XData.ExtendedData edata))
+			if (this.ExtendedData.TryGet(AppId.DefaultName, out ExtendedData edata))
 			{
-				var header = edata.Records.FirstOrDefault() as XData.ExtendedDataString;
+				var header = edata.Records.FirstOrDefault() as ExtendedDataString;
 				if (header == null || header.Value != DimensionStyle.StyleOverrideEntryName)
 				{
 					return false;
@@ -420,12 +420,12 @@ public abstract class Dimension : Entity, IOrientable
 	/// override section; otherwise, <see langword="null"/>.</returns>
 	public DxfClassMap GetStyleOverrideMap()
 	{
-		if (!this.ExtendedData.TryGet(AppId.DefaultName, out XData.ExtendedData edata))
+		if (!this.ExtendedData.TryGet(AppId.DefaultName, out ExtendedData edata))
 		{
 			return null;
 		}
 
-		var header = edata.Records.FirstOrDefault() as XData.ExtendedDataString;
+		var header = edata.Records.FirstOrDefault() as ExtendedDataString;
 		if (header == null || header.Value != DimensionStyle.StyleOverrideEntryName)
 		{
 			return null;
@@ -437,9 +437,9 @@ public abstract class Dimension : Entity, IOrientable
 		map.Name = header.Value;
 
 		var values = edata.Records
-			.SkipWhile(c => c is not XData.ExtendedDataControlString)
+			.SkipWhile(c => c is not ExtendedDataControlString)
 			.Skip(1)
-			.TakeWhile(c => c is not XData.ExtendedDataControlString)
+			.TakeWhile(c => c is not ExtendedDataControlString)
 			.ToArray();
 
 		if (values.Length % 2 != 0)
@@ -450,9 +450,9 @@ public abstract class Dimension : Entity, IOrientable
 
 		for (int i = 0; i < values.Length; i++)
 		{
-			XData.ExtendedDataInteger16 code = values[i] as XData.ExtendedDataInteger16;
+			ExtendedDataInteger16 code = values[i] as ExtendedDataInteger16;
 			i++;
-			XData.ExtendedDataRecord value = values[i];
+			ExtendedDataRecord value = values[i];
 			DxfProperty prop = styleMap.DxfProperties[code.Value];
 			prop.StoredValue = value.RawValue;
 
@@ -492,7 +492,7 @@ public abstract class Dimension : Entity, IOrientable
 			//   (null, null)   → true  → already skipped above (over would be null)
 			//   (null, value)  → false → include (null→value: new assignment)
 			//   (value, value) → delegates to curr.Equals(over)
-			if (!object.Equals(curr, over))
+			if (!Equals(curr, over))
 			{
 				item.Value.StoredValue = over;
 				overrideMap.DxfProperties.Add(item.Key, item.Value);
@@ -512,7 +512,7 @@ public abstract class Dimension : Entity, IOrientable
 	/// entry.</param>
 	public void SetStyleOverrideMap(DxfClassMap map)
 	{
-		XData.ExtendedData edata = this.ExtendedData.TryAdd(AppId.DefaultName, new ExtendedData());
+		ExtendedData edata = this.ExtendedData.TryAdd(AppId.DefaultName, new ExtendedData());
 		edata.Records.Clear();
 
 		edata.Records.Add(new ExtendedDataString(DimensionStyle.StyleOverrideEntryName));

@@ -1060,7 +1060,7 @@ public class DimensionStyle : TableEntry
 
 	private BlockRecord _dimArrowBlock = null;
 
-	private double _joggedRadiusDimensionTransverseSegmentAngle = System.Math.PI / 4.0;
+	private double _joggedRadiusDimensionTransverseSegmentAngle = Math.PI / 4.0;
 
 	private BlockRecord _leaderArrow = null;
 

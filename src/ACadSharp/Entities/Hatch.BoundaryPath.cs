@@ -212,7 +212,7 @@ public partial class Hatch
 					case Entities.Arc arc:
 						this.Edges.Add(new Arc(arc));
 						break;
-					case Entities.Circle circle:
+					case Circle circle:
 						this.Edges.Add(new Arc(circle));
 						break;
 					case Entities.Ellipse ellipse:
@@ -239,7 +239,7 @@ public partial class Hatch
 			{
 				if (this.Edges.Count > 1 && this.IsPolyline)
 				{
-					throw new System.InvalidOperationException();
+					throw new InvalidOperationException();
 				}
 			}
 		}
@@ -248,16 +248,16 @@ public partial class Hatch
 		{
 			switch (e.Action)
 			{
-				case System.Collections.Specialized.NotifyCollectionChangedAction.Add:
+				case NotifyCollectionChangedAction.Add:
 					this.onAdd(e);
 					break;
-				case System.Collections.Specialized.NotifyCollectionChangedAction.Remove:
+				case NotifyCollectionChangedAction.Remove:
 					break;
-				case System.Collections.Specialized.NotifyCollectionChangedAction.Replace:
+				case NotifyCollectionChangedAction.Replace:
 					break;
-				case System.Collections.Specialized.NotifyCollectionChangedAction.Move:
+				case NotifyCollectionChangedAction.Move:
 					break;
-				case System.Collections.Specialized.NotifyCollectionChangedAction.Reset:
+				case NotifyCollectionChangedAction.Reset:
 					break;
 			}
 		}

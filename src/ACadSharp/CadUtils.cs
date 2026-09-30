@@ -216,12 +216,12 @@ internal static class CadUtils
 
 	public static Encoding GetListedEncoding(string codePage)
 	{
-		CodePage code = CadUtils.GetCodePage(codePage);
+		CodePage code = GetCodePage(codePage);
 
 		try
 		{
 #if !NET48
-			Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance);
+			Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
 #endif
 			return Encoding.GetEncoding((int)code);
 		}
@@ -361,7 +361,7 @@ internal static class CadUtils
 		int day = (int)Math.Floor((14.0 - date.Month) / 12.0);
 		int year = date.Year + 4800 - day;
 		int month = date.Month;
-		jdate = date.Day + (int)System.Math.Floor((153.0 * (double)(month + 12 * day - 3) + 2.0) / 5.0) + 365 * year + (int)System.Math.Floor((double)year / 4.0) - (int)System.Math.Floor((double)year / 100.0) + (int)System.Math.Floor((double)year / 400.0) - 32045;
+		jdate = date.Day + (int)Math.Floor((153.0 * (double)(month + 12 * day - 3) + 2.0) / 5.0) + 365 * year + (int)Math.Floor((double)year / 4.0) - (int)Math.Floor((double)year / 100.0) + (int)Math.Floor((double)year / 400.0) - 32045;
 		miliseconds = date.Millisecond + date.Second * 1000 + date.Minute * 60000 + date.Hour * 3600000;
 	}
 }

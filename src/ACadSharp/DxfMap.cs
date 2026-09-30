@@ -27,7 +27,7 @@ namespace ACadSharp
 		public static DxfMap Create<T>()
 			where T : CadObject
 		{
-			return DxfMap.Create(typeof(T));
+			return Create(typeof(T));
 		}
 
 		//Useful only for none cad objects

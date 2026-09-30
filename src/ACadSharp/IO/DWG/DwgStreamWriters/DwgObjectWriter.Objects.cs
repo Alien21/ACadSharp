@@ -821,7 +821,7 @@ internal partial class DwgObjectWriter : DwgSectionIO
 		this._writer.WriteVariableText(cellStyle.Name);
 	}
 
-	private void writeDateCadValue(System.DateTime? date)
+	private void writeDateCadValue(DateTime? date)
 	{
 		if (date.HasValue)
 		{
@@ -842,7 +842,7 @@ internal partial class DwgObjectWriter : DwgSectionIO
 			}
 			else
 			{
-				long seconds = (long)(date.Value.ToUniversalTime() - new System.DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc)).TotalSeconds;
+				long seconds = (long)(date.Value.ToUniversalTime() - new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc)).TotalSeconds;
 
 				int high = (int)(seconds >> 32);
 				int low = (int)seconds;
@@ -1012,7 +1012,7 @@ internal partial class DwgObjectWriter : DwgSectionIO
 					this._writer.Write3BitDouble((XYZ)parameter.EvaluatedValue.Value);
 					break;
 				default:
-					throw new System.NotImplementedException($"[EvaluationExpression] Code not implemented {parameter.EvaluatedValue.GroupCodeValueType}");
+					throw new NotImplementedException($"[EvaluationExpression] Code not implemented {parameter.EvaluatedValue.GroupCodeValueType}");
 			}
 		}
 
@@ -1486,7 +1486,7 @@ internal partial class DwgObjectWriter : DwgSectionIO
 				rgb.R,
 				0b11000010
 			};
-			uint packed = CSUtilities.Converters.LittleEndianConverter.Instance.ToUInt32(arr);
+			uint packed = LittleEndianConverter.Instance.ToUInt32(arr);
 			this._writer.WriteBitLong((int)packed);
 		}
 	}

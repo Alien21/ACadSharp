@@ -13,10 +13,10 @@ namespace ACadSharp.IO.DWG
 		{
 			if (string.IsNullOrEmpty(value))
 			{
-				base.WriteBitShort(0);
+				this.WriteBitShort(0);
 				return;
 			}
-			base.WriteBitShort((short)value.Length);
+			this.WriteBitShort((short)value.Length);
 			base.WriteBytes(Encoding.Unicode.GetBytes(value));
 		}
 
@@ -26,8 +26,8 @@ namespace ACadSharp.IO.DWG
 			byte[] bytes = Encoding.Unicode.GetBytes(value);
 
 			this.WriteBytes(bytes);
-			base.Stream.WriteByte(0);
-			base.Stream.WriteByte(0);
+			this.Stream.WriteByte(0);
+			this.Stream.WriteByte(0);
 		}
 	}
 }

@@ -5,7 +5,7 @@ namespace ACadSharp.Attributes
 	/// <summary>
 	/// Mark the class as a dxf class equivalent
 	/// </summary>
-	[System.AttributeUsage(AttributeTargets.Class, Inherited = true, AllowMultiple = false)]
+	[AttributeUsage(AttributeTargets.Class, Inherited = true, AllowMultiple = false)]
 	public sealed class DxfNameAttribute : Attribute
 	{
 		/// <summary>

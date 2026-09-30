@@ -7,11 +7,11 @@ namespace ACadSharp.IO.Templates;
 
 internal partial class CadTableStyleTemplate : CadTemplate<TableStyle>
 {
-	public List<CadTableStyleTemplate.CadCellStyleTemplate> CellStyleTemplates { get; } = new();
+	public List<CadCellStyleTemplate> CellStyleTemplates { get; } = new();
 
-	public CadTableStyleTemplate.CadCellStyleTemplate CurrentCellStyleTemplate { get; private set; }
+	public CadCellStyleTemplate CurrentCellStyleTemplate { get; private set; }
 
-	public CadTableStyleTemplate.CadCellStyleTemplate TableCellStyleTemplate { get; set; }
+	public CadCellStyleTemplate TableCellStyleTemplate { get; set; }
 
 	public CadTableStyleTemplate() : base(new TableStyle())
 	{
@@ -21,9 +21,9 @@ internal partial class CadTableStyleTemplate : CadTemplate<TableStyle>
 	{
 	}
 
-	public CadTableStyleTemplate.CadCellStyleTemplate CreateCurrentCellStyleTemplate()
+	public CadCellStyleTemplate CreateCurrentCellStyleTemplate()
 	{
-		this.CurrentCellStyleTemplate = new CadTableStyleTemplate.CadCellStyleTemplate();
+		this.CurrentCellStyleTemplate = new CadCellStyleTemplate();
 		this.CellStyleTemplates.Add(this.CurrentCellStyleTemplate);
 		return this.CurrentCellStyleTemplate;
 	}
@@ -39,7 +39,7 @@ internal partial class CadTableStyleTemplate : CadTemplate<TableStyle>
 			item.Build(builder);
 		}
 
-		if (this.tryGetCellStyle(TableStyle.CellStyle.DataCellStyleName, out CellStyle dataStyle))
+		if (this.tryGetCellStyle(CellStyle.DataCellStyleName, out CellStyle dataStyle))
 		{
 			this.CadObject.DataCellStyle = dataStyle;
 		}

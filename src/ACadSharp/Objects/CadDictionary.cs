@@ -1,6 +1,5 @@
 ﻿using ACadSharp.Attributes;
 using ACadSharp.Extensions;
-using CSUtilities.Extensions;
 using System;
 using System.Collections;
 using System.Collections.Generic;

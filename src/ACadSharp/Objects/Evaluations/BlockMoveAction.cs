@@ -59,7 +59,7 @@ public class BlockMoveAction : BlockAction, IDxfClassDefined
 			DxfName = DxfFileToken.ObjectBlockMoveAction,
 			ItemClassId = 499,
 			MaintenanceVersion = 55,
-			ProxyFlags = ACadSharp.Classes.ProxyFlags.EraseAllowed | ACadSharp.Classes.ProxyFlags.CloningAllowed | ACadSharp.Classes.ProxyFlags.DisablesProxyWarningDialog,
+			ProxyFlags = ProxyFlags.EraseAllowed | ProxyFlags.CloningAllowed | ProxyFlags.DisablesProxyWarningDialog,
 			WasZombie = false,
 		};
 	}

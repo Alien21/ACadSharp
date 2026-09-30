@@ -1070,7 +1070,7 @@ namespace ACadSharp.IO.DWG
 				//Ending sentinel: 0x30,0x84,0xE0,0xDC,0x02,0x21,0xC7,0x56,0xA0,0x83,0x97,0x47,0xB1,0x92,0xCC,0xA0
 				this.checkSentinel(this._reader, DwgSectionDefinition.EndSentinels[SectionName]);
 			}
-			catch (System.Exception ex)
+			catch (Exception ex)
 			{
 				this.notify($"An error ocurred at the end of the Header reading", NotificationType.Error, ex);
 			}

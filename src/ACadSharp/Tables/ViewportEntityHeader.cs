@@ -4,6 +4,6 @@
 	{
 		public override ObjectType ObjectType { get => ObjectType.VP_ENT_HDR; }
 
-		public override string Name { get => base.name; set => base.name = value; }
+		public override string Name { get => this.name; set => this.name = value; }
 	}
 }

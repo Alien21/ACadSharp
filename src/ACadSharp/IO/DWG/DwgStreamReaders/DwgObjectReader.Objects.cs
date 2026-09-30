@@ -627,7 +627,7 @@ internal partial class DwgObjectReader : DwgSectionIO
 					value.SetValue(this.readStringCadValue());
 					break;
 				case CadValueType.Date:
-					System.DateTime? dateTime = this.readDateCadValue();
+					DateTime? dateTime = this.readDateCadValue();
 					if (dateTime.HasValue)
 					{
 						value.SetValue(dateTime.Value);
@@ -744,7 +744,7 @@ internal partial class DwgObjectReader : DwgSectionIO
 					value = this._mergedReaders.Read3BitDouble();
 					break;
 				default:
-					throw new System.NotImplementedException($"[EvaluationExpression] Code not implemented {groupValue}");
+					throw new NotImplementedException($"[EvaluationExpression] Code not implemented {groupValue}");
 			}
 
 			template.CadObject.EvaluatedValue = new DxfValuePair((DxfCode)code, value);

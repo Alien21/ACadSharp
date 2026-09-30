@@ -43,7 +43,7 @@ public class DynamicBlockPurgePreventer : NonGraphicalObject, IDxfClassDefined
 			DxfName = DxfFileToken.ObjectDynamicBlockPurgePreventer,
 			ItemClassId = 499,
 			MaintenanceVersion = 61,
-			ProxyFlags = ACadSharp.Classes.ProxyFlags.EraseAllowed | ACadSharp.Classes.ProxyFlags.CloningAllowed | ACadSharp.Classes.ProxyFlags.DisablesProxyWarningDialog,
+			ProxyFlags = ProxyFlags.EraseAllowed | ProxyFlags.CloningAllowed | ProxyFlags.DisablesProxyWarningDialog,
 			WasZombie = false,
 		};
 	}

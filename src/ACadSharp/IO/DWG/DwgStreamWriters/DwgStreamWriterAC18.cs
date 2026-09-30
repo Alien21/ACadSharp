@@ -52,7 +52,7 @@ namespace ACadSharp.IO.DWG
 
 			if (color.IsByBlock && transparency.IsByLayer)
 			{
-				base.WriteBitShort(0);
+				this.WriteBitShort(0);
 				return;
 			}
 
@@ -73,13 +73,13 @@ namespace ACadSharp.IO.DWG
 				size = (ushort)(size | (ushort)color.Index);
 			}
 
-			base.WriteBitShort((short)size);
+			this.WriteBitShort((short)size);
 
 			if (color.IsTrueColor)
 			{
 				byte[] arr = new byte[] { color.B, color.G, color.R, 0b11000010 };
 				uint rgb = LittleEndianConverter.Instance.ToUInt32(arr);
-				base.WriteBitLong((int)rgb);
+				this.WriteBitLong((int)rgb);
 			}
 
 			if (!transparency.IsByLayer)
@@ -88,7 +88,7 @@ namespace ACadSharp.IO.DWG
 				//0 = BYLAYER,
 				//1 = BYBLOCK,
 				//3 = the transparency value in the last byte.
-				base.WriteBitLong(Transparency.ToAlphaValue(transparency));
+				this.WriteBitLong(Transparency.ToAlphaValue(transparency));
 			}
 		}
 
@@ -99,7 +99,7 @@ namespace ACadSharp.IO.DWG
 
 			if (color.IsByBlock && transparency.IsByLayer && !isBookColor)
 			{
-				base.WriteBitShort(0);
+				this.WriteBitShort(0);
 				return;
 			}
 
@@ -126,13 +126,13 @@ namespace ACadSharp.IO.DWG
 				size = (ushort)(size | (ushort)color.Index);
 			}
 
-			base.WriteBitShort((short)size);
+			this.WriteBitShort((short)size);
 
 			if (color.IsTrueColor)
 			{
 				byte[] arr = new byte[] { color.B, color.G, color.R, 0b11000010 };
 				uint rgb = LittleEndianConverter.Instance.ToUInt32(arr);
-				base.WriteBitLong((int)rgb);
+				this.WriteBitLong((int)rgb);
 			}
 
 			if (!transparency.IsByLayer)
@@ -141,7 +141,7 @@ namespace ACadSharp.IO.DWG
 				//0 = BYLAYER,
 				//1 = BYBLOCK,
 				//3 = the transparency value in the last byte.
-				base.WriteBitLong(Transparency.ToAlphaValue(transparency));
+				this.WriteBitLong(Transparency.ToAlphaValue(transparency));
 			}
 		}
 	}

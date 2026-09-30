@@ -4,7 +4,6 @@ using ACadSharp.Objects;
 using ACadSharp.Tables;
 using ACadSharp.XData;
 using CSMath;
-using CSUtilities.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -715,7 +714,7 @@ internal abstract class DxfSectionReaderBase
 				return true;
 			case 50 when tmp.CadObject is MText mtext://Read only for MText
 				double angle = this._reader.ValueAsAngle;
-				mtext.AlignmentPoint = new XYZ(System.Math.Cos(angle), System.Math.Sin(angle), 0.0);
+				mtext.AlignmentPoint = new XYZ(Math.Cos(angle), Math.Sin(angle), 0.0);
 				return true;
 			case 7:
 				tmp.StyleName = this._reader.ValueAsString;
@@ -1673,7 +1672,7 @@ internal abstract class DxfSectionReaderBase
 		switch (this._reader.Code)
 		{
 			case 10:
-				controlPoint = new CSMath.XYZ(this._reader.ValueAsDouble, 0, 0);
+				controlPoint = new XYZ(this._reader.ValueAsDouble, 0, 0);
 				tmp.CadObject.ControlPoints.Add(controlPoint);
 				return true;
 			case 20:
@@ -1687,7 +1686,7 @@ internal abstract class DxfSectionReaderBase
 				tmp.CadObject.ControlPoints[tmp.CadObject.ControlPoints.Count - 1] = controlPoint;
 				return true;
 			case 11:
-				fitPoint = new CSMath.XYZ(this._reader.ValueAsDouble, 0, 0);
+				fitPoint = new XYZ(this._reader.ValueAsDouble, 0, 0);
 				tmp.CadObject.FitPoints.Add(fitPoint);
 				return true;
 			case 21:

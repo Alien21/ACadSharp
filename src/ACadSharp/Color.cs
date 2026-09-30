@@ -545,7 +545,7 @@ namespace ACadSharp
 		{
 			if (this.IsTrueColor)
 			{
-				return Color.ApproxIndex(this.R, this.G, this.B);
+				return ApproxIndex(this.R, this.G, this.B);
 			}
 			else
 			{

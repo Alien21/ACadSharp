@@ -64,7 +64,7 @@ public partial class MLineStyle : NonGraphicalObject
 	/// End angle
 	/// </summary>
 	[DxfCodeValue(DxfReferenceType.IsAngle, 52)]
-	public double EndAngle { get; set; } = System.Math.PI / 2;
+	public double EndAngle { get; set; } = Math.PI / 2;
 
 	/// <summary>
 	/// Fill color
@@ -104,7 +104,7 @@ public partial class MLineStyle : NonGraphicalObject
 	/// Start angle
 	/// </summary>
 	[DxfCodeValue(DxfReferenceType.IsAngle, 51)]
-	public double StartAngle { get; set; } = System.Math.PI / 2;
+	public double StartAngle { get; set; } = Math.PI / 2;
 
 	/// <inheritdoc/>
 	public override string SubclassMarker => DxfSubclassMarker.MLineStyle;

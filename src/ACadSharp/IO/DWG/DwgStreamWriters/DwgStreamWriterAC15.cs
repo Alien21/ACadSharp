@@ -17,14 +17,14 @@ namespace ACadSharp.IO.DWG
 			{
 				//If the single bit is 1, 
 				//the extrusion value is assumed to be 0,0,1 and no explicit extrusion is stored.
-				base.WriteBit(value: true);
+				this.WriteBit(value: true);
 				return;
 			}
 
 			//If the single bit is 0, 
-			base.WriteBit(value: false);
+			this.WriteBit(value: false);
 			//then it will be followed by 3BD.
-			base.Write3BitDouble(normal);
+			this.Write3BitDouble(normal);
 		}
 
 		public override void WriteBitThickness(double thickness)
@@ -34,12 +34,12 @@ namespace ACadSharp.IO.DWG
 			//If the bit is 0, then a BD that represents the thickness follows.
 			if (thickness == 0.0)
 			{
-				base.WriteBit(value: true);
+				this.WriteBit(value: true);
 				return;
 			}
 
-			base.WriteBit(value: false);
-			base.WriteBitDouble(thickness);
+			this.WriteBit(value: false);
+			this.WriteBitDouble(thickness);
 		}
 	}
 }

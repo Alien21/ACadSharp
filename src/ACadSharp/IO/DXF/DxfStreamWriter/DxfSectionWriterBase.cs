@@ -185,7 +185,7 @@ internal abstract partial class DxfSectionWriterBase
 						this._writer.Write(str.Code, str.Value);
 						break;
 					default:
-						throw new System.NotSupportedException($"ExtendedDataRecord of type {record.GetType().FullName} not supported.");
+						throw new NotSupportedException($"ExtendedDataRecord of type {record.GetType().FullName} not supported.");
 				}
 			}
 		}

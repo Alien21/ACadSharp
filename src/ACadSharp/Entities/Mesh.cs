@@ -65,7 +65,7 @@ public partial class Mesh : Entity, IDxfClassDefined
 		get
 		{
 			if (this.XDictionary == null
-				|| !this.XDictionary.TryGetEntry(Mesh.TextureCoordsXRecordName, out XRecord xrec))
+				|| !this.XDictionary.TryGetEntry(TextureCoordsXRecordName, out XRecord xrec))
 			{
 				return Enumerable.Empty<XYZ>();
 			}
@@ -100,9 +100,9 @@ public partial class Mesh : Entity, IDxfClassDefined
 		set
 		{
 			var xdict = this.CreateExtendedDictionary();
-			if (!xdict.TryGetEntry(Entities.Mesh.TextureCoordsXRecordName, out XRecord xrec))
+			if (!xdict.TryGetEntry(TextureCoordsXRecordName, out XRecord xrec))
 			{
-				xrec = new XRecord(Entities.Mesh.TextureCoordsXRecordName);
+				xrec = new XRecord(TextureCoordsXRecordName);
 				xdict.Add(xrec);
 			}
 
@@ -139,9 +139,9 @@ public partial class Mesh : Entity, IDxfClassDefined
 	public void AddTextureCoordinate(XYZ uvw)
 	{
 		var xdict = this.CreateExtendedDictionary();
-		if (!xdict.TryGetEntry(Entities.Mesh.TextureCoordsXRecordName, out XRecord xrec))
+		if (!xdict.TryGetEntry(TextureCoordsXRecordName, out XRecord xrec))
 		{
-			xrec = new XRecord(Entities.Mesh.TextureCoordsXRecordName);
+			xrec = new XRecord(TextureCoordsXRecordName);
 			xdict.Add(xrec);
 		}
 

@@ -155,7 +155,7 @@ public partial class LineType
 		/// Clone the current segment.
 		/// </summary>
 		/// <returns></returns>
-		public LineType.Segment Clone()
+		public Segment Clone()
 		{
 			Segment clone = MemberwiseClone() as Segment;
 			clone.Owner = null;

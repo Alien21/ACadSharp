@@ -8,13 +8,13 @@ namespace ACadSharp.IO.DWG
 
 		static DwgCheckSumCalculator()
 		{
-			DwgCheckSumCalculator.MagicSequence = new byte[256];
+			MagicSequence = new byte[256];
 			int randSeed = 1;
 			for (int i = 0; i < 256; i++)
 			{
 				randSeed *= 0x343FD;
 				randSeed += 0x269EC3;
-				DwgCheckSumCalculator.MagicSequence[i] = (byte)(randSeed >> 0x10);
+				MagicSequence[i] = (byte)(randSeed >> 0x10);
 			}
 		}
 

@@ -5,7 +5,6 @@ using CSUtilities.Converters;
 using CSUtilities.IO;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 
 namespace ACadSharp.Entities.ProxyGraphics;

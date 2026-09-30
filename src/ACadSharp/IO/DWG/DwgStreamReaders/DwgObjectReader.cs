@@ -1082,8 +1082,8 @@ namespace ACadSharp.IO.DWG
 			//Entry name TV 2
 			//Warning: anonymous blocks do not write the full name, only *{type character}
 			string name = this._textReader.ReadVariableText();
-			if (name.Equals(BlockRecord.ModelSpaceName, System.StringComparison.CurrentCultureIgnoreCase) ||
-				name.Equals(BlockRecord.PaperSpaceName, System.StringComparison.CurrentCultureIgnoreCase))
+			if (name.Equals(BlockRecord.ModelSpaceName, StringComparison.CurrentCultureIgnoreCase) ||
+				name.Equals(BlockRecord.PaperSpaceName, StringComparison.CurrentCultureIgnoreCase))
 				record.Name = name;
 
 			this.readXrefDependantBit(template.CadObject);
@@ -1861,7 +1861,7 @@ namespace ACadSharp.IO.DWG
 					geoData.UpDirection = this._mergedReaders.Read3BitDouble();
 
 					//BD Angle of north direction (radians, angle measured clockwise from the (0, 1) vector).
-					double angle = System.Math.PI / 2.0 - this._mergedReaders.ReadBitDouble();
+					double angle = Math.PI / 2.0 - this._mergedReaders.ReadBitDouble();
 					geoData.NorthDirection = new XY(Math.Cos(angle), Math.Sin(angle));
 
 					//3BD  Obsolete, ODA writes(1, 1, 1)
@@ -2984,7 +2984,7 @@ namespace ACadSharp.IO.DWG
 					vertex.EndWidth = this._objectReader.ReadBitDouble();
 				}
 			}
-			catch (System.Exception ex)
+			catch (Exception ex)
 			{
 				this._builder.Notify($"Exception while reading LwPolyline: {ex.GetType().FullName}", NotificationType.Error, ex);
 				return template;

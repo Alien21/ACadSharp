@@ -35,7 +35,7 @@ public class BlockGripLocationComponent : EvaluationExpression, IDxfClassDefined
 			DxfName = DxfFileToken.ObjectBlockGripLocationComponent,
 			ItemClassId = 499,
 			MaintenanceVersion = 20,
-			ProxyFlags = ACadSharp.Classes.ProxyFlags.EraseAllowed | ACadSharp.Classes.ProxyFlags.CloningAllowed | ACadSharp.Classes.ProxyFlags.DisablesProxyWarningDialog,
+			ProxyFlags = ProxyFlags.EraseAllowed | ProxyFlags.CloningAllowed | ProxyFlags.DisablesProxyWarningDialog,
 			WasZombie = false,
 		};
 	}

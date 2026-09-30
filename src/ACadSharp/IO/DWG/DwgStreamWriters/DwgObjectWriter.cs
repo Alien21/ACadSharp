@@ -1155,7 +1155,7 @@ internal partial class DwgObjectWriter : DwgSectionIO
 						}
 						break;
 					default:
-						throw new System.NotSupportedException($"ExtendedDataRecord of type {record.GetType().FullName} not supported.");
+						throw new NotSupportedException($"ExtendedDataRecord of type {record.GetType().FullName} not supported.");
 				}
 			}
 

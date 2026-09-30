@@ -248,7 +248,7 @@ public class DwgWriter : CadWriterBase<DwgWriterConfiguration>
 	private void writeHeader()
 	{
 		MemoryStream stream = new MemoryStream();
-		DWG.DwgHeaderWriter writer = new DWG.DwgHeaderWriter(stream, this._document, this._encoding);
+		DwgHeaderWriter writer = new DwgHeaderWriter(stream, this._document, this._encoding);
 		writer.OnNotification += this.triggerNotification;
 		writer.Write();
 

@@ -51,7 +51,7 @@ public partial class MLineStyle
 		/// Clone the current segment.
 		/// </summary>
 		/// <returns></returns>
-		public MLineStyle.Element Clone()
+		public Element Clone()
 		{
 			Element clone = MemberwiseClone() as Element;
 			clone.Owner = null;

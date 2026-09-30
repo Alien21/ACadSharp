@@ -32,7 +32,7 @@ internal class DwgFileHeaderWriterAC15 : DwgFileHeaderWriterBase<DwgFileHeaderAC
 	private Dictionary<string, DwgSectionLocatorRecord> _records = new();
 
 	public DwgFileHeaderWriterAC15(
-		System.IO.Stream stream,
+		Stream stream,
 		Encoding encoding,
 		CadDocument document)
 		: base(stream, encoding, document)
@@ -79,7 +79,7 @@ internal class DwgFileHeaderWriterAC15 : DwgFileHeaderWriterBase<DwgFileHeaderAC
 
 	private void writeFileHeader()
 	{
-		System.IO.MemoryStream ms = new System.IO.MemoryStream();
+		MemoryStream ms = new MemoryStream();
 
 		//0x00	6	“ACXXXX” version string
 		IDwgStreamWriter writer = DwgStreamWriterBase.GetStreamWriter(this._version, ms, this._encoding);

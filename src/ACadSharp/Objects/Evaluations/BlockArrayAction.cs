@@ -45,7 +45,7 @@ public class BlockArrayAction : BlockAction, IDxfClassDefined
 			DxfName = DxfFileToken.ObjectBlockArrayAction,
 			ItemClassId = 499,
 			MaintenanceVersion = 55,
-			ProxyFlags = ACadSharp.Classes.ProxyFlags.EraseAllowed | ACadSharp.Classes.ProxyFlags.CloningAllowed | ACadSharp.Classes.ProxyFlags.DisablesProxyWarningDialog,
+			ProxyFlags = ProxyFlags.EraseAllowed | ProxyFlags.CloningAllowed | ProxyFlags.DisablesProxyWarningDialog,
 			WasZombie = false,
 		};
 	}

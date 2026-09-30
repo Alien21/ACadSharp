@@ -1,7 +1,6 @@
 ﻿using ACadSharp.Attributes;
 using ACadSharp.Objects;
 using CSMath;
-using System;
 
 namespace ACadSharp.Tables
 {

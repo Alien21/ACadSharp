@@ -74,7 +74,7 @@ namespace ACadSharp.Objects
 
 			public object Clone()
 			{
-				LeaderRoot clone = (LeaderRoot)base.MemberwiseClone();
+				LeaderRoot clone = (LeaderRoot)this.MemberwiseClone();
 
 				clone.BreakStartEndPointsPairs = new List<StartEndPointPair>();
 				foreach (var breakStartEndPoint in this.BreakStartEndPointsPairs)

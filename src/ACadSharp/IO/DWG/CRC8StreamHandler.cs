@@ -69,7 +69,7 @@ namespace ACadSharp.IO.DWG
 
 			while (endPos-- > 0)
 			{
-				currValue = CRC8StreamHandler.decode(currValue, buffer[index]);
+				currValue = decode(currValue, buffer[index]);
 				index++;
 			}
 

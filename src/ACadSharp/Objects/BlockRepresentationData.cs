@@ -37,7 +37,7 @@ public class BlockRepresentationData : NonGraphicalObject, IDxfClassDefined
 			DxfName = DxfFileToken.ObjectBlockRepresentationData,
 			ItemClassId = 499,
 			MaintenanceVersion = 58,
-			ProxyFlags = ACadSharp.Classes.ProxyFlags.EraseAllowed | ACadSharp.Classes.ProxyFlags.CloningAllowed | ACadSharp.Classes.ProxyFlags.DisablesProxyWarningDialog,
+			ProxyFlags = ProxyFlags.EraseAllowed | ProxyFlags.CloningAllowed | ProxyFlags.DisablesProxyWarningDialog,
 			WasZombie = false,
 		};
 	}

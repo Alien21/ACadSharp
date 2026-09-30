@@ -667,7 +667,7 @@ public class Spline : Entity, IOrientable
 			{
 				if (applySqrt)
 				{
-					init += System.Math.Sqrt((fp - pt).GetLength());
+					init += Math.Sqrt((fp - pt).GetLength());
 				}
 				else
 				{

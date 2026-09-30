@@ -3,7 +3,7 @@ using System.Linq;
 
 namespace ACadSharp.Attributes
 {
-	[System.AttributeUsage(AttributeTargets.Property, Inherited = false, AllowMultiple = false)]
+	[AttributeUsage(AttributeTargets.Property, Inherited = false, AllowMultiple = false)]
 	public sealed class CadSystemVariableAttribute : Attribute, ICodeValueAttribute
 	{
 		/// <summary>

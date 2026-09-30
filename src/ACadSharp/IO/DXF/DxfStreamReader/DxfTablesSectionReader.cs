@@ -670,10 +670,10 @@ internal class DxfTablesSectionReader : DxfSectionReaderBase
 					template.Segment.Text = this._reader.ValueAsString;
 					break;
 				case 44:
-					template.Segment.Offset = new CSMath.XY(this._reader.ValueAsDouble, template.Segment.Offset.Y);
+					template.Segment.Offset = new XY(this._reader.ValueAsDouble, template.Segment.Offset.Y);
 					break;
 				case 45:
-					template.Segment.Offset = new CSMath.XY(template.Segment.Offset.X, this._reader.ValueAsDouble);
+					template.Segment.Offset = new XY(template.Segment.Offset.X, this._reader.ValueAsDouble);
 					break;
 				case 46:
 					template.Segment.Scale = this._reader.ValueAsDouble;

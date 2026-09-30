@@ -22,7 +22,7 @@ public class DimensionLinear : DimensionAligned
 	{
 		get
 		{
-			var angle = new XYZ(System.Math.Cos(this.Rotation), System.Math.Sin(this.Rotation), 0.0);
+			var angle = new XYZ(Math.Cos(this.Rotation), Math.Sin(this.Rotation), 0.0);
 			double dot = Math.Abs(angle.Dot((this.SecondPoint - this.FirstPoint).Normalize()));
 			return base.Measurement * dot;
 		}

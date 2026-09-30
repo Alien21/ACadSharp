@@ -1632,21 +1632,21 @@ internal class DxfObjectsSectionReader : DxfSectionReaderBase
 		switch (this._reader.Code)
 		{
 			case 40 when tmp.CadObject.Version == GeoDataVersion.R2009:
-				tmp.CadObject.ReferencePoint = new CSMath.XYZ(
+				tmp.CadObject.ReferencePoint = new XYZ(
 					tmp.CadObject.ReferencePoint.X,
 					this._reader.ValueAsDouble,
 					tmp.CadObject.ReferencePoint.Z
 					);
 				return true;
 			case 41 when tmp.CadObject.Version == GeoDataVersion.R2009:
-				tmp.CadObject.ReferencePoint = new CSMath.XYZ(
+				tmp.CadObject.ReferencePoint = new XYZ(
 					this._reader.ValueAsDouble,
 					tmp.CadObject.ReferencePoint.Y,
 					tmp.CadObject.ReferencePoint.Z
 					);
 				return true;
 			case 42 when tmp.CadObject.Version == GeoDataVersion.R2009:
-				tmp.CadObject.ReferencePoint = new CSMath.XYZ(
+				tmp.CadObject.ReferencePoint = new XYZ(
 					tmp.CadObject.ReferencePoint.X,
 					tmp.CadObject.ReferencePoint.Y,
 					this._reader.ValueAsDouble
@@ -1656,8 +1656,8 @@ internal class DxfObjectsSectionReader : DxfSectionReaderBase
 				tmp.CadObject.HorizontalUnitScale = this._reader.ValueAsDouble;
 				return true;
 			case 52 when tmp.CadObject.Version == GeoDataVersion.R2009:
-				double angle = System.Math.PI / 2.0 - this._reader.ValueAsAngle;
-				tmp.CadObject.NorthDirection = new CSMath.XY(Math.Cos(angle), Math.Sin(angle));
+				double angle = Math.PI / 2.0 - this._reader.ValueAsAngle;
+				tmp.CadObject.NorthDirection = new XY(Math.Cos(angle), Math.Sin(angle));
 				return true;
 			// Number of Geo-Mesh points
 			case 93:
@@ -1676,8 +1676,8 @@ internal class DxfObjectsSectionReader : DxfSectionReaderBase
 
 					tmp.CadObject.Points.Add(new GeoData.GeoMeshPoint
 					{
-						Source = new CSMath.XY(sourceX, sourceY),
-						Destination = new CSMath.XY(destX, destY)
+						Source = new XY(sourceX, sourceY),
+						Destination = new XY(destX, destY)
 					});
 				}
 				return true;
@@ -2101,7 +2101,7 @@ internal class DxfObjectsSectionReader : DxfSectionReaderBase
 					this._reader.ReadNext();
 				}
 
-				tmp.CadObject.DiffuseMatrix = new CSMath.Matrix4(arr.ToArray());
+				tmp.CadObject.DiffuseMatrix = new Matrix4(arr.ToArray());
 				return this.checkObjectEnd(template, map, this.readMaterial);
 			case 47:
 				arr = new();
@@ -2114,7 +2114,7 @@ internal class DxfObjectsSectionReader : DxfSectionReaderBase
 					this._reader.ReadNext();
 				}
 
-				tmp.CadObject.SpecularMatrix = new CSMath.Matrix4(arr.ToArray());
+				tmp.CadObject.SpecularMatrix = new Matrix4(arr.ToArray());
 				return this.checkObjectEnd(template, map, this.readMaterial);
 			case 49:
 				arr = new();
@@ -2127,7 +2127,7 @@ internal class DxfObjectsSectionReader : DxfSectionReaderBase
 					this._reader.ReadNext();
 				}
 
-				tmp.CadObject.ReflectionMatrix = new CSMath.Matrix4(arr.ToArray());
+				tmp.CadObject.ReflectionMatrix = new Matrix4(arr.ToArray());
 				return this.checkObjectEnd(template, map, this.readMaterial);
 			case 142:
 				arr = new();
@@ -2140,7 +2140,7 @@ internal class DxfObjectsSectionReader : DxfSectionReaderBase
 					this._reader.ReadNext();
 				}
 
-				tmp.CadObject.OpacityMatrix = new CSMath.Matrix4(arr.ToArray());
+				tmp.CadObject.OpacityMatrix = new Matrix4(arr.ToArray());
 				return this.checkObjectEnd(template, map, this.readMaterial);
 			case 144:
 				arr = new();
@@ -2153,7 +2153,7 @@ internal class DxfObjectsSectionReader : DxfSectionReaderBase
 					this._reader.ReadNext();
 				}
 
-				tmp.CadObject.BumpMatrix = new CSMath.Matrix4(arr.ToArray());
+				tmp.CadObject.BumpMatrix = new Matrix4(arr.ToArray());
 				return this.checkObjectEnd(template, map, this.readMaterial);
 			case 147:
 				arr = new();
@@ -2166,7 +2166,7 @@ internal class DxfObjectsSectionReader : DxfSectionReaderBase
 					this._reader.ReadNext();
 				}
 
-				tmp.CadObject.RefractionMatrix = new CSMath.Matrix4(arr.ToArray());
+				tmp.CadObject.RefractionMatrix = new Matrix4(arr.ToArray());
 				return this.checkObjectEnd(template, map, this.readMaterial);
 			default:
 				return this.tryAssignCurrentValue(template.CadObject, map.SubClasses[tmp.CadObject.SubclassMarker]);
@@ -2348,7 +2348,7 @@ internal class DxfObjectsSectionReader : DxfSectionReaderBase
 			default:
 				DxfMap map = DxfMap.Create<CadObject>();
 				CadUnknownNonGraphicalObjectTemplate unknownEntityTemplate = null;
-				if (this._builder.DocumentToBuild.Classes.TryGetByName(this._reader.ValueAsString, out Classes.DxfClass dxfClass))
+				if (this._builder.DocumentToBuild.Classes.TryGetByName(this._reader.ValueAsString, out DxfClass dxfClass))
 				{
 					this._builder.Notify($"NonGraphicalObject not supported read as an UnknownNonGraphicalObject: {this._reader.ValueAsString}", NotificationType.NotImplemented);
 					unknownEntityTemplate = new CadUnknownNonGraphicalObjectTemplate(new UnknownNonGraphicalObject(dxfClass));
@@ -2579,7 +2579,7 @@ internal class DxfObjectsSectionReader : DxfSectionReaderBase
 		this.readCommonObjectData(template);
 #pragma warning restore CS0618 // Type or member is obsolete
 
-		System.Diagnostics.Debug.Assert(DxfSubclassMarker.SortentsTable == this._reader.ValueAsString);
+		Debug.Assert(DxfSubclassMarker.SortentsTable == this._reader.ValueAsString);
 
 		//Jump the 100 marker
 		this._reader.ReadNext();
@@ -2624,11 +2624,11 @@ internal class DxfObjectsSectionReader : DxfSectionReaderBase
 		switch (this._reader.Code)
 		{
 			case 10:
-				filter.BoundaryPoints.Add(new CSMath.XY(this._reader.ValueAsDouble, 0));
+				filter.BoundaryPoints.Add(new XY(this._reader.ValueAsDouble, 0));
 				return true;
 			case 20:
 				var pt = filter.BoundaryPoints.LastOrDefault();
-				filter.BoundaryPoints[filter.BoundaryPoints.Count - 1] = new CSMath.XY(pt.X, this._reader.ValueAsDouble);
+				filter.BoundaryPoints[filter.BoundaryPoints.Count - 1] = new XY(pt.X, this._reader.ValueAsDouble);
 				return true;
 			case 40:
 				if (filter.ClipFrontPlane && !tmp.HasFrontPlane)

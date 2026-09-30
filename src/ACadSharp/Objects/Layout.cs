@@ -31,7 +31,7 @@ public class Layout : PlotSettings, IDxfClassDefined
 		{
 			if (value == null)
 			{
-				throw new System.ArgumentNullException(nameof(value));
+				throw new ArgumentNullException(nameof(value));
 			}
 
 			this._blockRecord = value;

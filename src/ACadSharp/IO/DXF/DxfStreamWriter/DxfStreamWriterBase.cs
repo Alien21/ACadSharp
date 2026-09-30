@@ -20,12 +20,12 @@ internal abstract class DxfStreamWriterBase : IDxfStreamWriter
 		this.Write((int)code, value, map);
 	}
 
-	public void Write(DxfCode code, CSMath.IVector value, DxfClassMap map = null)
+	public void Write(DxfCode code, IVector value, DxfClassMap map = null)
 	{
 		this.Write((int)code, value, map);
 	}
 
-	public void Write(int code, CSMath.IVector value, DxfClassMap map = null)
+	public void Write(int code, IVector value, DxfClassMap map = null)
 	{
 		for (int i = 0; i < value.Dimension; i++)
 		{

@@ -115,7 +115,7 @@ public partial class TableStyle
 		/// Gets or sets the alignment of the content within a cell.
 		/// </summary>
 		[DxfCodeValue(170)]
-		public TableStyle.CellAlignmentType CellAlignment { get; set; }
+		public CellAlignmentType CellAlignment { get; set; }
 
 		/// <summary>
 		/// Gets or sets the color of cell content.

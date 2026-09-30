@@ -61,7 +61,7 @@ public abstract class CadReaderBase<T> : ICadReader
 		try
 		{
 #if !NET48
-			Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance);
+			Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
 #endif
 			return Encoding.GetEncoding(code);
 		}

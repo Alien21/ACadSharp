@@ -141,7 +141,7 @@ internal class DxfObjectsSectionWriter : DxfSectionWriterBase
 
 			this._writer.Write(210, geodata.UpDirection, map);
 
-			this._writer.Write(52, MathHelper.RadToDeg(System.Math.PI / 2.0 - geodata.NorthDirection.GetAngle()), map);
+			this._writer.Write(52, MathHelper.RadToDeg(Math.PI / 2.0 - geodata.NorthDirection.GetAngle()), map);
 
 			this._writer.Write(43, 1.0, map);
 			this._writer.Write(44, 1.0, map);
@@ -184,8 +184,8 @@ internal class DxfObjectsSectionWriter : DxfSectionWriterBase
 			this._writer.Write(16, XY.Zero, map);
 			this._writer.Write(17, XY.Zero, map);
 
-			this._writer.Write(54, MathHelper.RadToDeg(System.Math.PI / 2.0 - geodata.NorthDirection.GetAngle()), map);
-			this._writer.Write(140, System.Math.PI / 2.0 - geodata.NorthDirection.GetAngle(), map);
+			this._writer.Write(54, MathHelper.RadToDeg(Math.PI / 2.0 - geodata.NorthDirection.GetAngle()), map);
+			this._writer.Write(140, Math.PI / 2.0 - geodata.NorthDirection.GetAngle(), map);
 
 			this._writer.Write(95, (int)geodata.ScaleEstimationMethod, map);
 			this._writer.Write(141, geodata.UserSpecifiedScaleFactor, map);
