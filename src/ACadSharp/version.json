@@ -1,0 +1,9 @@
+{
+  "SchemaVersion": 5,
+  "Projects": {
+    "acadsharp.csproj": {
+      "Version": "3.7.10.0",
+      "Disabled": true
+    }
+  }
+}
